@@ -1,5 +1,5 @@
 ﻿using System;
-namespace HackathonWeb.Class
+namespace HackathonWeb
 {
     public class MRTElevator
     {
