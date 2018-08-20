@@ -97,6 +97,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Class\OpenDataStorage.cs" />
+    <Compile Include="Models\Hotel.cs" />
     <Compile Include="Models\MRTElevator.cs" />
     <Compile Include="Models\Restaurant.cs" />
   </ItemGroup>

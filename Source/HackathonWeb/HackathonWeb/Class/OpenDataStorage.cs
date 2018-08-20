@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using HackathonWeb.Models;
+using Newtonsoft.Json;
 
 namespace HackathonWeb
 {
@@ -46,6 +47,10 @@ namespace HackathonWeb
                     FriendlyInfo = data[17]
                 };
             }).ToList());
+
+        private List<Hotel> _hotels;
+        public List<Hotel> Hotels => _hotels?? (
+            _hotels = JsonConvert.DeserializeObject<List<Hotel>>(File.ReadAllText("OpenDataSource/Hotel.json")));
 
         private OpenDataStorage()
         {
