@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PocController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -112,9 +113,11 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="OpenDataSource\Hotel.json" />
     <None Include="OpenDataSource\MRTElevators.csv" />
     <Content Include="OpenDataSource\res_tpe_opendata.csv" />
     <None Include="OpenDataSource\SaveTrips.csv" />
+    <Content Include="Views\Poc\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
