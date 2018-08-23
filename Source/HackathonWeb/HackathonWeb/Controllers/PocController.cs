@@ -13,5 +13,10 @@ namespace HackathonWeb.Controllers
         {
             return View();
         }
+
+        public ActionResult GetHotelList()
+        {
+            return View(OpenDataStorage.Instance.Hotels);
+        }
     }
 }
