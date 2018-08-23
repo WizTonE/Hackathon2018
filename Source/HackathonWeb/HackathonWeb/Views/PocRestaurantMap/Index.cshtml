@@ -71,6 +71,8 @@
         });
 	var mapEvents = new H.mapevents.MapEvents(restaurantMap);
 	var behavior = new H.mapevents.Behavior(mapEvents);
+	// Create the default UI:
+	var ui = H.ui.UI.createDefault(restaurantMap, maptypes);
 
 	// Add event listener:
 	restaurantMap.addEventListener('dragend', function(evt) {
@@ -100,6 +102,14 @@
 		    console.log(dataAddress[index]);
 		    console.log(dataStoreName[index]);
 		    console.log(dataStoreTel[index]);
+
+		    // Create an info bubble object at a specific geographic location:
+		    var bubble = new H.ui.InfoBubble({ lng: dataPosition[index].lng, lat: dataPosition[index].lat }, {
+		        content: '店名：<div>' + dataStoreName[index] + '</div>' + '電話：<div>' + dataStoreTel[index] + '</div>' + '住址：<div>' + dataAddress[index] + '</div>'
+		    });
+
+            // Add info bubble to the UI:
+		    ui.addBubble(bubble);
 		}
 	});
 
@@ -116,8 +126,6 @@
 	        RefreshMarker();
 	    }
 	});
-
-	// var ui = H.ui.UI.createDefault(restaurantMap, defaultLayers);
 
     // Define a variable holding SVG mark-up that defines an icon image:
     var svgMarkup = '<svg width="24" height="24" ' +
