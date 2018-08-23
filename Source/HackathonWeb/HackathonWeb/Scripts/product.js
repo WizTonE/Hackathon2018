@@ -10,11 +10,21 @@
 const HomeView = Vue.component('home-view', {
     data: function () {
         return {
-            name: "WELCOME"
+            name: "2018 Way Finding"
         }
 
     },
-    template: '<div>{{ name }}</div>'
+
+    methods: {
+        onClickGo: function() {
+            this.$router.push("language");
+        }
+
+    },
+
+    template: '<div class="home-container">\
+                <div class="button-box"><div class="go-button" v-on:click="onClickGo">GO</div></div>\
+               </div>'
 
 
 });
@@ -24,12 +34,25 @@ const LanguageView = Vue.component('language-view',
     {
         data: function() {
             return {
-
-                options: [ "ENGLISH", "JAPANESE", "KOREA"]
+                options: ["ENGLISH", "JAPANESE", "KOREA"]
 
             }
         },
-        template: '<div><div v-for="option in options"> {{ option }}</div></div>'
+        template:
+            '<div class="language-container"><div class="language-item" v-for="option in options"> {{ option }}</div></div>'
+    });
+
+
+const SetupView = Vue.component('setup-view',
+    {
+        data: function () {
+            return {
+
+                
+
+            }
+        },
+        template: '<div class="setup-container"><div>Setup your address here. Show HERE(tm) map here. Show the route here.</div></div>'
     })
 
 /**
@@ -42,7 +65,8 @@ const LanguageView = Vue.component('language-view',
  */
 const productDefaultRoutes = [
     { path: '/home', component: HomeView },
-    { path: '/language', component: LanguageView }
+    { path: '/language', component: LanguageView },
+    { path: '/setup', component: SetupView }
 ];
 
 const router = new VueRouter({

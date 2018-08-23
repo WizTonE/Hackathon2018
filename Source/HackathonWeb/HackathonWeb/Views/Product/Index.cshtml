@@ -4,38 +4,36 @@
     ViewBag.Title = "Product Home";
     Layout = "~/Views/Shared/_ProductLayout.cshtml";
 }
-<style type="text/css">
-    .main-app-container { }
-
-    .app-bar { }
-
-
-</style>
 
 <div id="app" class="main-app-container">
-    <div class="app-title">Way Finding by CodeMonkey 2018 </div>
-    <div class="app-tag-line">{{ tagLine }} </div>
+    <div class="app-title"><span class="app-tag-line">{{ tagLine }}. CodeMonkey @@ 2018 Hackthon</span></div>
+    
 
 
-    <div id="app-nav" class="nav-view">
-        <!-- use router-link component for navigation. -->
-        <!-- specify the link by passing the `to` prop. -->
-        <!-- `<router-link>` will be rendered as an `<a>` tag by default -->
-        <router-link to="/home">Home</router-link>
-        <router-link to="/language">Language</router-link>
-        <router-link to="/setup">Setup</router-link>
-        <router-link to="/airportNav">Airport</router-link>
-        <router-link to="/metroNav">Metro</router-link>
-        <router-link to="/taxiNav">Taxi</router-link>
-        <router-link to="/destination">Destination</router-link>
-        <router-link to="/feedback">Feedback</router-link>
-
-    </div>
+    
     <!-- route outlet -->
     <!-- component matched by the route will render here -->
     <div id="app-content" class="content-view">
         <router-view></router-view>
     </div>
+    
+    <div id="app-nav" class="nav-view-box">
+
+
+        <div class="nav-items-box">
+            <span class="nav-button"><router-link to="/home">Home</router-link></span>
+            <span class="nav-button"><router-link to="/language">Language</router-link></span>
+            <span class="nav-button"><router-link to="/setup">Setup</router-link></span>
+            <span class="nav-button"><router-link to="/airportNav">Airport</router-link></span>
+            <span class="nav-button"><router-link to="/metroNav">Metro</router-link></span>
+            <span class="nav-button"><router-link to="/taxiNav">Taxi</router-link></span>
+            <span class="nav-button"><router-link to="/destination">Destination</router-link></span>
+            <span class="nav-button"><router-link to="/feedback">Feedback</router-link></span>
+        </div>
+
+
+    </div>
+
 </div>
 
 
