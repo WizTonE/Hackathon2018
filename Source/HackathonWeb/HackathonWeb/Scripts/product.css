@@ -22,7 +22,7 @@ a:active { color: white; }
 
 .content-view {
     width: 100%;
-    height: 70%;
+    height: 90%;
     position: absolute;
     margin: 0 0 40% 0;
 }
@@ -77,30 +77,30 @@ a:active { color: white; }
 .nav-view-box {
 
     width: 100%;
-    height: 30%;
+    height: 10%;
     position: absolute;
     bottom: 0;
     left: 0;
 }
 
 .nav-items-box {
-    position: relative;
+    position: absolute;
     width: 100%;
-    height: 50%;
+    /* height: 50%; */
     display: flex;
     flex-direction: row;
-    align-items: center;
     justify-content: center;
+    bottom: 4px;
 }
 
 .nav-items-box .nav-button {
     flex: 0 0 80px;
-    height: 40px;
+    height: 1.6em;
     /* background-image:  */
     border: 1px solid #00726E;
     background-color: #00726e;
     color: #FFFFFF;
-    padding: 1em;
+    padding: 0.2em;
 }
 
 
@@ -124,3 +124,114 @@ a:active { color: white; }
     padding: 0.5em;
     
 }
+
+
+.map-view {
+    width: 100%;
+    
+}
+
+.way-nav-box {
+    width: 100%;
+    min-height: 100px;
+    position: absolute;
+    bottom: 0;
+    background: #49B4B2;
+}
+
+.current-position {
+    padding: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.current-position .airport {
+    width: 120px;
+    height: 120px;
+    padding: 0 1rem 0 0;
+    background: url("assets/img-airport.png") no-repeat;
+}
+
+.position-name {
+    font-size: 2rem;
+    color: #fff;
+}
+
+.position-address {
+    font-size: 1rem;
+    color: #00726E;
+}
+
+
+
+.position-selection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    padding: 1rem;
+}
+
+
+.position-selection .item {
+    flex: 1 0 auto;
+    min-width: 75px;
+    min-height: 75px;
+}
+
+
+
+
+.position-selection .pos0 {
+    width: 35px;
+    height: 35px;
+    background: url("assets/img-stage1_green.png") no-repeat;
+}
+
+.position-selection .pos1 {
+    width: 35px;
+    height: 35px;
+    background: url("assets/img-stage2_green.png") no-repeat;
+}
+
+.position-selection .pos2 {
+    width: 35px;
+    height: 35px;
+    background: url("assets/img-stage3_green.png") no-repeat;
+}
+
+.position-selection .pos3 {
+    width: 35px;
+    height: 35px;
+    background: url("assets/img-stage4_green.png") no-repeat;
+}
+
+.position-selection .pos4 {
+    width: 35px;
+    height: 35px;
+    background: url("assets/img-stage5_green.png") no-repeat;
+}
+
+.active .pos0 {
+    background: url("assets/img-stage1_yellow.png") no-repeat;
+}
+
+.active .pos1 {
+    background: url("assets/img-stage2_yellow.png") no-repeat;
+}
+
+.active .pos2 {
+    background: url("assets/img-stage3_yellow.png") no-repeat;
+}
+
+.active .pos3 {
+    background: url("assets/img-stage4_yellow.png") no-repeat;
+}
+
+.active .pos4 {
+    background: url("assets/img-stage5_yellow.png") no-repeat;
+}
+
+

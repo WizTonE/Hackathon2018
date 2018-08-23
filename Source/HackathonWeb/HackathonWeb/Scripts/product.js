@@ -10,6 +10,69 @@
 
 /**
  *
+ * 地圖元件下方的交通工具路徑顯示
+ *
+ */
+Vue.component('way-nav-view', {
+
+    props: ["current"],
+
+    data: function () {
+        return {
+
+            iconNames: ["airport", "metro", "taxi", "hotel"],
+            positionNames: ["Taiwan Taoyuan International Airport", "Taipei Metro System", "Accessible Taxi Driver", "Your Hotel"],
+            positionAddress: ["No. 9, Hangzhan S. Rd., Dayuan Dist., Taoyuan City", "On The Right Track", "By Your Side", "Your Hotel Address"]
+
+        } 
+    },
+
+    computed: {
+        currentIconName: function () {
+            let index = parseInt(this.current);
+            return this.iconNames[index];
+            
+        },
+
+        currentPositionName: function () {
+            let index = parseInt(this.current);
+            return this.positionNames[index];
+        },
+
+        currentPositionAddress: function() {
+            return this.positionAddress[parseInt(this.current)];
+        }
+
+    },
+
+    methods: {},
+
+    template: '<div class="way-nav-box">\
+    <div class="current-position">\
+        <div :class="currentIconName"></div>\
+        <div>\
+            <div class="position-name">{{ currentPositionName }}</div>\
+            <div class="position-address">{{ currentPositionAddress }}</div>\
+        </div>\
+    </div>\
+    <div class="position-selection">\
+        <div class="item airport" :class="{active : current == 0}"><div class="pos0"></div><div class="icon-plane">P</div></div>\
+        <div class="item metro" :class="{active : current == 1}"><div class="pos1"></div><div class="icon-metro">M</div></div>\
+        <div class="item taxi" :class="{active : current == 2}"><div class="pos2"></div><div class="icon-taxi">T</div></div>\
+        <div class="item hotel" :class="{active : current == 3}"><div class="pos3"></div><div class="icon-hotel">H</div></div>\
+    </div>\
+    <div class="location-details">\
+        <span class="icon-toilet"/>\
+        <span class="icon-elevator"/>\
+    </div>\
+    </div>\
+</div>'
+
+
+});
+
+/**
+ *
  * 首頁
  *
  */
@@ -85,8 +148,22 @@ const AirportNavView = Vue.component('airport-nav-view',
             return {
             }
         },
+
+
+        computed: {
+            geo: function() {
+                return window._app ? window._app.$data.latitude : "";
+
+            }
+
+        },
+
+
         template:
-            '<div class="setup-container"><div>airport nav view</div></div>'
+            '<div class="setup-container">\
+                <div class="map-view">airport nav view</div><span>{{ geo }}</span>\
+                <way-nav-view current="0"></way-nav-view>\
+            </div>'
     });
 
 /**
@@ -211,7 +288,7 @@ const router = new VueRouter({
  * ===============================================
  *
  */
-const app = new Vue({
+const app = window._app =  new Vue({
     el: "#app",
     router,
 
