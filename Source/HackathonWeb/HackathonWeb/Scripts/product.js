@@ -159,6 +159,23 @@ const FeedbackView = Vue.component('feedback-view',
             '<div class="setup-container"><div>feedback view</div></div>'
     });
 
+/**
+ *
+ *
+ * 餐廳地圖
+ *
+ */
+const RestaurantView = Vue.component('restaurant-view',
+    {
+        data: function () {
+            return {
+            }
+        },
+        template:
+            '<div class="setup-container"><div>restaurant view</div></div>'
+    });
+
+
 
 
 /**
@@ -177,7 +194,8 @@ const productDefaultRoutes = [
     { path: '/metro', component: MetroNavView },
     { path: '/uber', component: UberNavView },
     { path: '/destination', component: DestinationView },
-    { path: '/feedback', component: FeedbackView }
+    { path: '/feedback', component: FeedbackView },
+    { path: '/restaurant', component: RestaurantView },
 ];
 
 const router = new VueRouter({
