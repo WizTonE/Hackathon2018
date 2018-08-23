@@ -12,16 +12,7 @@ namespace HackathonWeb.Controllers
         // GET: Poc
         public ActionResult Index()
         {
-            List<Restaurant> restaurantLocation = new List<Restaurant>();
-            //Restaurant data = new Restaurant();
-            //data.Address = "台北市中山區中山北路二段36巷18號";
-            //restaurantLocation.Add(data);
-            foreach (Restaurant data in OpenDataStorage.Instance.Restaurants)
-            {
-                restaurantLocation.Add(data);
-            }
-
-            return View(restaurantLocation.ToList());
+            return View(OpenDataStorage.Instance.Restaurants.ToList());
         }
     }
 }
