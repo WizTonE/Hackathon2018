@@ -1,0 +1,177 @@
+﻿
+@using HackathonWeb.Models
+@model IList<HackathonWeb.Models.Restaurant>
+@{
+    ViewBag.Title = "Poc";
+}
+
+<h2>Poc</h2>
+
+<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+
+
+
+<div style="width: 640px; height: 480px" id="mapContainer"></div>
+<br/>
+<div style="width: 640px; height: 480px" id="mapNavigator"></div>
+<script src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
+        type="text/javascript" charset="utf-8"></script>
+<script src="http://js.api.here.com/v3/3.0/mapsjs-service.js"
+        type="text/javascript" charset="utf-8"></script>
+<script>
+	/*
+	 <div>
+    @foreach(var obj in Model) 
+    {
+        <li>Name:-    @obj.Address</li>
+    }
+	    </div>
+
+	 */
+
+    // Initialize the platform object:
+    var platform = new H.service.Platform({
+        'app_id': '9shB49HQGahETgr6LWDZ',
+        'app_code': '3CPwa96KM9xO-Z90EOBNig'
+    });
+
+    // Obtain the default map types from the platform object
+    var maptypes = platform.createDefaultLayers();
+
+    // Instantiate (and display) a map object:
+    var restaurantMap = new H.Map(
+        document.getElementById('mapNavigator'),
+        maptypes.normal.map,
+        {
+            zoom: 18,
+            center: { lng: 121.521, lat: 25.04885 }
+        });
+
+    // Define a variable holding SVG mark-up that defines an icon image:
+    var svgMarkup = '<svg width="24" height="24" ' +
+        'xmlns="http://www.w3.org/2000/svg">' +
+        '<rect stroke="white" fill="#1b468d" x="1" y="1" width="22" ' +
+        'height="22" /><text x="12" y="18" font-size="12pt" ' +
+        'font-family="Arial" font-weight="bold" text-anchor="middle" ' +
+        'fill="white">R</text></svg>';
+
+    // Create an icon, an object holding the latitude and longitude, and a marker:
+    var icon = new H.map.Icon(svgMarkup),
+        coords = {lng: 121.521, lat: 25.04885},
+        marker = new H.map.Marker(coords, {icon: icon});
+
+    // restaurantMap.addObject(marker);
+    // restaurantMap.setCenter(coords);
+
+    // Define a callback function to process the geocoding response:
+    var onRestaurantResult = function(result) {
+        var locations = result.Response.View[0].Result,
+            position,
+            marker;
+        // Add a marker for each location found
+        for (i = 0;  i < locations.length; i++) {
+            position = {
+                lat: locations[i].Location.DisplayPosition.Latitude,
+                lng: locations[i].Location.DisplayPosition.Longitude
+            };
+
+            // marker = new H.map.Marker(position);
+            var icon = new H.map.Icon(svgMarkup),
+                marker = new H.map.Marker(position, {icon: icon});
+
+            restaurantMap.addObject(marker);
+            restaurantMap.setCenter(position);
+        }
+    };
+    /*
+    // Create the parameters for the geocoding request:
+    var geocodingParams = {
+        searchText: '臺北市南港區三重路23號'
+    };
+
+    // Get an instance of the geocoding service:
+    var geocoder = platform.getGeocodingService();
+
+    // Call the geocode method with the geocoding parameters,
+    // the callback and an error callback function (called if a
+    // communication error occurs):
+    geocoder.geocode(geocodingParams, onRestaurantResult, function(e) {
+        alert(e);
+    });
+    */
+
+    function SearchRestaurant(address) {
+        // Create the parameters for the geocoding request:
+        var geocodingParams = {
+            searchText: address
+        };
+
+        // Get an instance of the geocoding service:
+        var geocoder = platform.getGeocodingService();
+
+        // Call the geocode method with the geocoding parameters,
+        // the callback and an error callback function (called if a
+        // communication error occurs):
+        geocoder.geocode(geocodingParams, onRestaurantResult, function(e) {
+            alert(e);
+        });
+
+    };
+
+    // alert('@Model[1].Address');
+    var dataAddress = [];
+    var dataPosition = [];
+    
+    @foreach (var d in Model)
+    {
+        @:dataAddress.push('@d.Address');
+
+		@:var position = {
+        @:lng:0,
+		@:lat:0
+        @:};
+        
+        @:position.lng = '@d.Longitude';
+        @:position.lat = '@d.Latitude';
+
+        @:dataPosition.push(position);
+    }
+
+    var center = {
+        lat: 25.04885,
+        lng: 121.521
+    };
+
+    var diff = 0.001;
+    var locations = [];
+    for (i = 0; i < dataPosition.length; ++i) {
+        //alert(dataPosition[i].lat);
+        //alert(dataPosition[i].lng);
+
+        //alert(center.lat);
+        //alert(center.lng);
+
+        // alert(parseFloat(dataPosition[i].lng) + diff);
+        if (parseFloat(dataPosition[i].lng) + diff > center.lng &&
+            parseFloat(dataPosition[i].lng) - diff < center.lng &&
+            parseFloat(dataPosition[i].lat) + diff > center.lat &&
+            parseFloat(dataPosition[i].lat) - diff < center.lat) {
+            locations.push(dataPosition[i]);
+        }
+            
+    }
+
+    // alert(locations.length);
+
+    // Add a marker for each location found
+    for (i = 0;  i < locations.length; i++) {
+        
+        // marker = new H.map.Marker(position);
+        var icon = new H.map.Icon(svgMarkup),
+            marker = new H.map.Marker(locations[i], {icon: icon});
+
+        restaurantMap.addObject(marker);
+        restaurantMap.setCenter(center);
+    }
+
+</script>
