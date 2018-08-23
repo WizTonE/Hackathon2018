@@ -124,3 +124,9 @@ a:active { color: white; }
     padding: 0.5em;
     
 }
+
+.uber-icon {
+    width: 100%;
+    height: 100%;
+    background: url("assets/img-uber.png") no-repeat;
+}
