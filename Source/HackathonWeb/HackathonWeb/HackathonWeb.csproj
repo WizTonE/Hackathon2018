@@ -113,10 +113,18 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="OpenDataSource\Hotel.json" />
-    <None Include="OpenDataSource\MRTElevators.csv" />
-    <Content Include="OpenDataSource\res_tpe_opendata.csv" />
-    <None Include="OpenDataSource\SaveTrips.csv" />
+    <Content Include="OpenDataSource\Hotel.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="OpenDataSource\MRTElevators.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="OpenDataSource\res_tpe_opendata.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="OpenDataSource\SaveTrips.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Views\Poc\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -11,12 +11,22 @@
 
 
 <div style="width: 640px; height: 480px" id="mapContainer"></div>
-<br/>
+<br />
 <div style="width: 640px; height: 480px" id="mapNavigator"></div>
+<br />
+<div style="width: 640px; height: 480px" id="mapInteractor"></div>
+
+
 <script src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
         type="text/javascript" charset="utf-8"></script>
 <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js"
         type="text/javascript" charset="utf-8"></script>
+<script src="http://js.api.here.com/v3/3.0/mapsjs-mapevents.js"
+        type="text/javascript" charset="utf-8"></script>
+<script src="http://js.api.here.com/v3/3.0/mapsjs-ui.js"
+        type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css"
+      href="http://js.api.here.com/v3/3.0/mapsjs-ui.css" />
 <script>
     // Initialize the platform object:
     var platform = new H.service.Platform({
@@ -105,6 +115,19 @@
 
             // Set the map's viewport to make the whole route visible:
             naviMap.setViewBounds(routeLine.getBounds());
+
+
+            var interactMap = new H.Map(
+                document.getElementById('mapInteractor'),
+                maptypes.normal.map,
+                {
+                    zoom: 17,
+                    center: { lng: 121.231749, lat: 25.077184 }
+                });
+            var mapEvents = new H.mapevents.MapEvents(interactMap);
+            var behavior = new H.mapevents.Behavior(mapEvents);
+            var ui = H.ui.UI.createDefault(interactMap, defaultLayers);
+
         }
     };
 
@@ -118,5 +141,5 @@
         function (error) {
             alert(error.message);
         });
-    
+
 </script>
