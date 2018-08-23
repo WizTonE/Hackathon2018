@@ -114,18 +114,18 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="OpenDataSource\Hotel.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="OpenDataSource\MRTElevators.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="OpenDataSource\res_tpe_opendata.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="OpenDataSource\SaveTrips.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+    <Content Include="OpenDataSource\Hotel.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="OpenDataSource\MRTElevators.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="OpenDataSource\res_tpe_opendata.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="OpenDataSource\SaveTrips.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Views\Poc\Index.cshtml" />
     <Content Include="Views\PocRestaurantMap\Index.cshtml" />
   </ItemGroup>
