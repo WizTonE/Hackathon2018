@@ -171,6 +171,7 @@
     <Content Include="Views\Poc\Index.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\Shared\_ProductLayout.cshtml" />
+    <Content Include="Views\PocRestaurantMap\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

@@ -12,16 +12,22 @@
 
 
 <div style="width: 640px; height: 480px" id="mapContainer"></div>
-<br/>
+<br />
 <div style="width: 640px; height: 480px" id="mapNavigator"></div>
 <script src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
         type="text/javascript" charset="utf-8"></script>
 <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js"
         type="text/javascript" charset="utf-8"></script>
+<script src="http://js.api.here.com/v3/3.0/mapsjs-mapevents.js"
+        type="text/javascript" charset="utf-8"></script>
+<script src="http://js.api.here.com/v3/3.0/mapsjs-ui.js"
+        type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css"
+      href="http://js.api.here.com/v3/3.0/mapsjs-ui.css" />
 <script>
 	/*
 	 <div>
-    @foreach(var obj in Model) 
+    @foreach(var obj in Model)
     {
         <li>Name:-    @obj.Address</li>
     }
@@ -46,6 +52,7 @@
             zoom: 18,
             center: { lng: 121.521, lat: 25.04885 }
         });
+    
 
     // Define a variable holding SVG mark-up that defines an icon image:
     var svgMarkup = '<svg width="24" height="24" ' +
@@ -121,7 +128,7 @@
     // alert('@Model[1].Address');
     var dataAddress = [];
     var dataPosition = [];
-    
+
     @foreach (var d in Model)
     {
         @:dataAddress.push('@d.Address');
@@ -130,7 +137,7 @@
         @:lng:0,
 		@:lat:0
         @:};
-        
+
         @:position.lng = '@d.Longitude';
         @:position.lat = '@d.Latitude';
 
@@ -158,14 +165,14 @@
             parseFloat(dataPosition[i].lat) - diff < center.lat) {
             locations.push(dataPosition[i]);
         }
-            
+
     }
 
     // alert(locations.length);
 
     // Add a marker for each location found
     for (i = 0;  i < locations.length; i++) {
-        
+
         // marker = new H.map.Marker(position);
         var icon = new H.map.Icon(svgMarkup),
             marker = new H.map.Marker(locations[i], {icon: icon});
@@ -173,5 +180,7 @@
         restaurantMap.addObject(marker);
         restaurantMap.setCenter(center);
     }
-
+	var mapEvents = new H.mapevents.MapEvents(restaurantMap);
+	var behavior = new H.mapevents.Behavior(mapEvents);
+	var ui = H.ui.UI.createDefault(restaurantMap, defaultLayers);
 </script>
