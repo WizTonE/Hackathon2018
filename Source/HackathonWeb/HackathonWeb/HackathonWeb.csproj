@@ -87,11 +87,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />
-    <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PocController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -100,9 +100,12 @@
     <Compile Include="Class\OpenDataStorage.cs" />
     <Compile Include="Models\Hotel.cs" />
     <Compile Include="Models\MRTElevator.cs" />
+    <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\Restaurant.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\product.css" />
+    <Content Include="Scripts\product.js" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -126,6 +129,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="Views\Poc\Index.cshtml" />
+    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Shared\_ProductLayout.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
