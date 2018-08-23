@@ -45,7 +45,14 @@ Vue.component('way-nav-view', {
 
     },
 
-    methods: {},
+    methods: {
+
+        onClickIcon: function (index) {
+            const viewNames = ["airport", "metro", "taxi", "hotel"];
+            this.$router.push(viewNames[index]);
+        }
+
+    },
 
     template: '<div class="way-nav-box">\
     <div class="current-position">\
@@ -56,14 +63,16 @@ Vue.component('way-nav-view', {
         </div>\
     </div>\
     <div class="position-selection">\
-        <div class="item airport" :class="{active : current == 0}"><div class="pos0"></div><div class="icon-plane">P</div></div>\
-        <div class="item metro" :class="{active : current == 1}"><div class="pos1"></div><div class="icon-metro">M</div></div>\
-        <div class="item taxi" :class="{active : current == 2}"><div class="pos2"></div><div class="icon-taxi">T</div></div>\
-        <div class="item hotel" :class="{active : current == 3}"><div class="pos3"></div><div class="icon-hotel">H</div></div>\
+        <div class="item airport" :class="{active : current == 0}" v-on:click="onClickIcon(0)"><div class="pos0"></div><div class="icon-airport"></div></div>\
+        <div class="item metro" :class="{active : current == 1}" v-on:click="onClickIcon(1)"><div class="pos1"></div><div class="icon-metro"></div></div>\
+        <div class="item taxi" :class="{active : current == 2}" v-on:click="onClickIcon(2)"><div class="pos2"></div><div class="icon-taxi"></div></div>\
+        <div class="item hotel" :class="{active : current == 3}" v-on:click="onClickIcon(3)"><div class="pos3"></div><div class="icon-hotel"></div></div>\
     </div>\
     <div class="location-details">\
-        <span class="icon-toilet"/>\
-        <span class="icon-elevator"/>\
+        <div>Location Detail</div>\
+        <div>\
+            <div class="icon-elevator"/>\
+        </div>\
     </div>\
     </div>\
 </div>'
@@ -180,7 +189,10 @@ const MetroNavView = Vue.component('metro-nav-view',
             }
         },
         template:
-            '<div class="setup-container"><div>metro nav view</div></div>'
+            '<div class="setup-container">\
+                <div>metro nav view</div>\
+                <way-nav-view current="1"></way-nav-view>\
+            </div>'
     });
 
 /**
@@ -197,14 +209,17 @@ const UberNavView = Vue.component('uber-nav-view',
             }
         },
         template:
-            '<div class="setup-container"><div>uber nav view</div></div>'
+            '<div class="setup-container">\
+                <div>uber nav view</div>\
+                <way-nav-view current="2"></way-nav-view>\
+            </div>'
     });
 
 
 /**
  *
  *
- * Uber導航
+ * Hotel
  *
  *
  */
@@ -215,14 +230,17 @@ const DestinationView = Vue.component('destination-view',
             }
         },
         template:
-            '<div class="setup-container"><div>destination view</div></div>'
+            '<div class="setup-container">\
+                <div>destination view</div>\
+                <way-nav-view current="3"></way-nav-view>\
+            </div>'
     });
 
 
 /**
  *
  *
- * Uber導航
+ * Feedback
  *
  *
  */
@@ -269,8 +287,8 @@ const productDefaultRoutes = [
     { path: '/setup', component: SetupView },
     { path: '/airport', component: AirportNavView },
     { path: '/metro', component: MetroNavView },
-    { path: '/uber', component: UberNavView },
-    { path: '/destination', component: DestinationView },
+    { path: '/taxi', component: UberNavView },
+    { path: '/hotel', component: DestinationView },
     { path: '/feedback', component: FeedbackView },
     { path: '/restaurant', component: RestaurantView },
 ];
