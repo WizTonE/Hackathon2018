@@ -18,6 +18,12 @@
         type="text/javascript" charset="utf-8"></script>
 <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js"
         type="text/javascript" charset="utf-8"></script>
+<script src="http://js.api.here.com/v3/3.0/mapsjs-mapevents.js"
+        type="text/javascript" charset="utf-8"></script>
+<script src="http://js.api.here.com/v3/3.0/mapsjs-ui.js"
+        type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css"
+      href="http://js.api.here.com/v3/3.0/mapsjs-ui.css" />
 <script>
 	/*
 	 <div>
@@ -28,6 +34,17 @@
 	    </div>
 
 	 */
+
+	var center = {
+	    lat: 25.04885,
+	    lng: 121.521
+	};
+
+	
+	var magicDiff = 0.0017;
+	var magicNumber = magicDiff;
+	var oldMapZoom = 18;
+	var maxMarker = 200;
 
     // Initialize the platform object:
     var platform = new H.service.Platform({
@@ -43,9 +60,36 @@
         document.getElementById('mapNavigator'),
         maptypes.normal.map,
         {
-            zoom: 18,
-            center: { lng: 121.521, lat: 25.04885 }
+            zoom: oldMapZoom,
+            center: { lng: center.lng, lat: center.lat }
         });
+	var mapEvents = new H.mapevents.MapEvents(restaurantMap);
+	var behavior = new H.mapevents.Behavior(mapEvents);
+
+	// Add event listener:
+	restaurantMap.addEventListener('dragend', function(evt) {
+	    // Log 'dragend' and 'mouse' events:
+	    console.log(evt.type, evt.currentPointer.type);
+	    var nowMapCenter = restaurantMap.getCenter();
+	    center.lng = nowMapCenter.lng;
+	    center.lat = nowMapCenter.lat;
+	});
+
+	restaurantMap.addEventListener('mapviewchangeend', function() {
+	    oldMapZoom = restaurantMap.getZoom(); 
+
+	    magicNumber = magicDiff + (18 - oldMapZoom) * (18 - oldMapZoom) * magicDiff;
+
+	    console.log(oldMapZoom);
+	    console.log(magicNumber);
+
+	    if(oldMapZoom > 10)
+	    {
+	        RefreshMarker();
+	    }
+	});
+
+	// var ui = H.ui.UI.createDefault(restaurantMap, defaultLayers);
 
     // Define a variable holding SVG mark-up that defines an icon image:
     var svgMarkup = '<svg width="24" height="24" ' +
@@ -135,43 +179,58 @@
         @:position.lat = '@d.Latitude';
 
         @:dataPosition.push(position);
+		@:console.log(position.lng, position.lat);
     }
 
-    var center = {
-        lat: 25.04885,
-        lng: 121.521
+	var markerContainer = [];
+	
+    function RefreshMarker() {
+		
+        var locations = [];
+        for (i = 0; i < dataPosition.length; ++i) {
+            //alert(dataPosition[i].lat);
+            //alert(dataPosition[i].lng);
+
+            //alert(center.lat);
+            //alert(center.lng);
+
+            // alert(parseFloat(dataPosition[i].lng) + magicNumber);
+            if (parseFloat(dataPosition[i].lng) + magicNumber > center.lng &&
+                parseFloat(dataPosition[i].lng) - magicNumber < center.lng &&
+                parseFloat(dataPosition[i].lat) + magicNumber > center.lat &&
+                parseFloat(dataPosition[i].lat) - magicNumber < center.lat) {
+
+				if(locations.length < maxMarker)
+				{
+                    locations.push(dataPosition[i]);
+			    }
+            }
+
+        }
+
+        console.log(dataPosition.length);
+        console.log(locations.length);
+
+        for(i = 0; i < markerContainer.length; ++i)
+        {
+            restaurantMap.removeObject(markerContainer[i]);
+            markerContainer.shift();
+            --i;
+        }
+
+        // Add a marker for each location found
+        for (i = 0; i < locations.length; i++) {
+
+            // marker = new H.map.Marker(position);
+            var icon = new H.map.Icon(svgMarkup),
+                marker = new H.map.Marker(locations[i], { icon: icon });
+
+            markerContainer.push(marker);
+            restaurantMap.addObject(marker);
+            // restaurantMap.setCenter(center);
+        }
+
     };
 
-    var diff = 0.001;
-    var locations = [];
-    for (i = 0; i < dataPosition.length; ++i) {
-        //alert(dataPosition[i].lat);
-        //alert(dataPosition[i].lng);
-
-        //alert(center.lat);
-        //alert(center.lng);
-
-        // alert(parseFloat(dataPosition[i].lng) + diff);
-        if (parseFloat(dataPosition[i].lng) + diff > center.lng &&
-            parseFloat(dataPosition[i].lng) - diff < center.lng &&
-            parseFloat(dataPosition[i].lat) + diff > center.lat &&
-            parseFloat(dataPosition[i].lat) - diff < center.lat) {
-            locations.push(dataPosition[i]);
-        }
-            
-    }
-
-    // alert(locations.length);
-
-    // Add a marker for each location found
-    for (i = 0;  i < locations.length; i++) {
-        
-        // marker = new H.map.Marker(position);
-        var icon = new H.map.Icon(svgMarkup),
-            marker = new H.map.Marker(locations[i], {icon: icon});
-
-        restaurantMap.addObject(marker);
-        restaurantMap.setCenter(center);
-    }
-
+	RefreshMarker();
 </script>
