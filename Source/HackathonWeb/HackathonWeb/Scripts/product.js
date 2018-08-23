@@ -216,7 +216,9 @@ const app = new Vue({
     router,
 
     data: {
-        tagLine: "Always on the right track"
+        tagLine: "Always on the right track",
+        latitude: 0,
+        longitude: 0
 
     },
 
@@ -224,6 +226,22 @@ const app = new Vue({
         location: function() {
             return "Taiwan";
         }
+    },
+
+    methods: {
+        getGeoLocation: function () {
+            var that = this;
+            navigator.geolocation.getCurrentPosition(function (position) {
+                that.longitude = position.coords.longitude;
+                that.latitude = position.coords.latitude;
+            });
+        }
+    },
+
+    mounted: function() {
+        this.getGeoLocation();
     }
+
+
 });
 
