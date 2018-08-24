@@ -1,4 +1,4 @@
-﻿
+
 /**
  * ===============================================
  *
@@ -103,6 +103,7 @@ Vue.component('here-map1',
         data: function () {
             return {
                 map: {},
+                isInited: false,
                 magicDiff: 0.0017,
                 magicNumber: 0,
                 oldMapZoom: 18,
@@ -123,13 +124,24 @@ Vue.component('here-map1',
 
         mounted: function () {
             // call map init on layout 
-            this.$data.map = window.setupHereMap(this.mapDivId);
+           //this.$data.map = window.setupHereMap(this.mapDivId);
+            this.init();
         },
 
         template: '<div :id="mapDivId" class="here-map-box global-map-box"></div>',
 
         methods: {
-            createPoints: function (...p) {
+            init: function() {
+                if (this.isInited || !window._app || !window._app.$data.isMapVisible) {
+                    return;
+                }
+                console.log(">> HERE map inited");
+                this.$data.map = window.setupHereMap(this.mapDivId);
+                this.isInited = true;
+            },
+
+
+            createPoints: function(...p) {
                 map.instance.removeObjects(map.instance.getObjects());
                 for (var i = 0; i < p.length; i++) {
                     position = {
@@ -358,7 +370,10 @@ const HomeView = Vue.component('home-view', {
     template: '<div class="home-container">\
                 <div class="button-box"><div class="go-button" v-on:click="onClickGo">GO</div></div>\
                </div>'
-
+    ,
+    created: function () {
+        if (window._app) window._app.displayGlobalMap(false);
+    }
 
 });
 
@@ -386,6 +401,10 @@ const LanguageView = Vue.component('language-view',
 
         template:
             '<div class="language-container"><div class="language-item" v-for="option in options" v-on:click=onClickLang> {{ option }}</div></div>'
+        ,
+        created: function () {
+            if (window._app) window._app.displayGlobalMap(false);
+        }
     });
 
 /**
@@ -453,10 +472,13 @@ const SetupView = Vue.component('setup-view',
                 message = m;
             }
 
+        },
 
-
-
+        created: function() {
+            if (window._app) window._app.displayGlobalMap(true);
         }
+
+
     });
 
 /**
@@ -488,7 +510,11 @@ const AirportNavView = Vue.component('airport-nav-view',
                 <div class="map-view">airport nav view</div><span>{{ geo }}</span>\
                 <way-nav-view current="0"></way-nav-view>\
                 <key-thumbnail original="key-pic-airport" thumbnail="thumb-key-pic-airport"></key-thumbnail>\
-            </div>'
+            </div>',
+
+        created: function () {
+            if (window._app) window._app.displayGlobalMap(false);
+        }
     });
 
 /**
@@ -507,12 +533,18 @@ const MetroNavView = Vue.component('metro-nav-view',
         template:
             '<div class="setup-container">\
                 <div class="map-view metro-pic-box">\
-                  <img src="../Scripts/assets/mrt-Zhongshan.png" width="100%" height="100%"> \
+                  <img src="../Scripts/assets/mrt-Zhongshan.png"> \
                   1.出口電梯：<br>出口4（南京西路北側之淡水線線形公園內）<br>出口5（南京西路與赤峰街交叉東北隅）<br>出口6（南京西路與赤峰街交叉東南隅）<br>2.月臺電梯：<br>淡水信義線：大廳層中央<br>松山新店線：大廳層東側<br>\
                 </div>\
                 <way-nav-view current="1"></way-nav-view>\
                 <key-thumbnail original="key-pic-metro" thumbnail="thumb-key-pic-metro"></key-thumbnail>\
-            </div>'
+                <key-thumbnail original="key-pic-metro2" thumbnail="thumb-key-pic-metro2"></key-thumbnail>\
+            </div>',
+
+
+        created: function () {
+            if (window._app) window._app.displayGlobalMap(false);
+        }
     });
 
 /**
@@ -532,8 +564,9 @@ const UberNavView = Vue.component('uber-nav-view',
         methods:{
             onClickUberIcon : function(){
                 var currentPosition = window._app.$data.currentPosition;
+                var destPosition = window._app.$data.destPosition;
                 //window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]="+currentPosition.latitude+"&pickup[longitude]="+currentPosition.longitude+"&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
-                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]=" + currentPosition.latitude + "&pickup[longitude]=" + currentPosition.longitude + "&pickup[nickname]=CurrentPlace&dropoff[latitude]=" + destPosition.latitude + "&dropoff[longitude]=" + destPosition.longitude + "&dropoff[nickname]=Home", "_blank");
+                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]=" + currentPosition.latitude + "&pickup[longitude]=" + currentPosition.longitude + "&pickup[nickname]=CurrentPlace&dropoff[latitude]=" + destPosition.latitude + "&dropoff[longitude]=" + destPosition.longitude + "&dropoff[nickname]=Destination", "_blank");
             },
             onClickTaxiIcon: function () {
                 alert(
@@ -550,7 +583,7 @@ const UberNavView = Vue.component('uber-nav-view',
         },
 
         created: function () {
-            window._app.$data.isMapVisible = true;
+            if (window._app) window._app.displayGlobalMap(true);
         },
 
         template:
@@ -627,6 +660,9 @@ const RestaurantView = Vue.component('restaurant-view',
                 <div>restaurant view</div>\
                 <way-nav-view current="4"></way-nav-view>\
             </div>',
+        created: function () {
+            if (window._app) window._app.displayGlobalMap(true);
+        },
         methods: {
             /*
             onClickMap: function () {
@@ -684,7 +720,7 @@ const app = window._app = new Vue({
         tagLine: "Always on the right track",
         currentPosition: {longitude:0,latitude:0},
         destPosition: {longitude:0,latitude:0},
-        isMapVisible: true,
+        isMapVisible: false,
         geoLocIntervalId: -1,
         restarauntInfo: window.RestarauntInfo,
         taxiInfo: window.TaxiInfo
@@ -707,7 +743,31 @@ const app = window._app = new Vue({
         raiseEvent: function() {
             var event = new CustomEvent('location', {detail: {lat: this.$data.currentPosition.latitude, lng: this.$data.currentPosition.longitude}});
             document.dispatchEvent(event);
+        },
+
+        initGlobalMapInstance: function() {
+            if (this.$refs.globalMapInstance.isInited) {
+                this.isMapVisible = true;
+                return;
+            }
+            console.log(">>>initGlobalMapInstance");
+            this.isMapVisible = true;
+            var that = this;
+            setTimeout(function() {
+                    that.$refs.globalMapInstance.init();
+                },
+            1);
+        },
+
+        displayGlobalMap: function (show) {
+            console.log(">>displayGlobalMap ? ", show);
+            if (show) {
+                this.initGlobalMapInstance();
+            } else {
+                this.isMapVisible = false;
+            }
         }
+
     },
 
     mounted: function () {
@@ -715,7 +775,7 @@ const app = window._app = new Vue({
         var that = this;
         this.geoLocIntervalId = setInterval( function(){ 
             that.getGeoLocation();
-        } , 3000 )
+        } , 3000 );
 
     },
 });

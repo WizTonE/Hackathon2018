@@ -1,17 +1,31 @@
 ﻿html {
     font-family: 'Montserrat', sans-serif;
-    
 }
 
-a { text-decoration: none; }
+body {
+    padding: 0;
+    margin: 0;
+}
 
-a:link { color: white; }
+a {
+    text-decoration: none;
+}
 
-a:visited { color: white; }
+    a:link {
+        color: white;
+    }
 
-a:hover { color: white; }
+    a:visited {
+        color: white;
+    }
 
-a:active { color: white; }
+    a:hover {
+        color: white;
+    }
+
+    a:active {
+        color: white;
+    }
 
 
 .main-app-container {
@@ -22,17 +36,20 @@ a:active { color: white; }
 
 .content-view {
     width: 100%;
-    height: 90%;
+    /* height: 90%; */
     position: absolute;
-    margin: 0 0 40% 0;
+    /* margin: 0 0 40% 0; */
+    bottom: 1.3rem;
+    top: 1.25rem;
 }
 
 .home-container {
     width: 100%;
     height: 100%;
     position: relative;
-    background: url("assets/img-homepage.png") no-repeat;
+    background: url(assets/img-homepage.png) no-repeat;
     background-position: center center;
+    background-size: contain;
 }
 
 .product-name {
@@ -41,43 +58,39 @@ a:active { color: white; }
 }
 
 .button-box {
-
     display: flex;
     flex-direction: column;
     align-items: center;
-
-
-
     position: absolute;
     width: 100%;
-    bottom: 4%;
-
+    bottom: 0.2rem;
     cursor: pointer;
 }
 
 .go-button {
-    width: 240px;
-    padding: 1.2em;
+    width: 20%;
+    padding: 1.2rem;
     text-align: center;
     color: #EEEEEE;
-    background: url("assets/btn-comfirm.png") no-repeat;
+    background: url(assets/btn-comfirm.png) no-repeat;
     background-size: 100% 100%;
-    font-size: 2em;    
+    font-size: 2rem;
 }
 
 .app-title {
     width: 100%;
-    text-align: center;
-    font-size: 0.5em;
-    color: #AAAAAA;
+    text-align: right;
+    font-size: 0.3rem;
+    padding: 0.15rem;
+    color: #78b4b2;
+    background-color: #00726e;
 }
 
 
 
 .nav-view-box {
-
     width: 100%;
-    height: 10%;
+    height: 1.3rem;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -86,33 +99,36 @@ a:active { color: white; }
 .nav-items-box {
     position: absolute;
     width: 100%;
-    /* height: 50%; */
+    height: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
-    bottom: 4px;
+    background-color: #00726e;
+    font-size: 0.75rem;
 }
 
-.nav-items-box .nav-button {
-    flex: 0 0 80px;
-    height: 1.6em;
-    /* background-image:  */
-    border: 1px solid #00726E;
-    background-color: #00726e;
-    color: #FFFFFF;
-    padding: 0.2em;
-}
+    .nav-items-box .nav-button {
+        flex: 0 0 80px;
+        height: 1.2rem;
+        /* background-image:  */
+        /* border: 1px solid #00726E; */
+        /* background-color: #00726e; */
+        /* border-left: 1px solid #AAA; */
+        color: #FFFFFF;
+        padding: 0.2rem;
+        text-align: center;
+    }
 
 
 .language-container {
-    width: 100%;
+    width: 75%;
     height: 100%;
     position: relative;
-    background: url("assets/bg-green-01.png") no-repeat;
+    background: url(assets/bg-green-01.png) no-repeat;
     background-size: cover;
-
     display: flex;
     flex-direction: column;
+    margin: 0 auto;
 }
 
 
@@ -126,7 +142,6 @@ a:active { color: white; }
     border-bottom-style: solid;
     border-bottom-width: 1px;
     cursor: pointer;
-    
 }
 
 .map-view {
@@ -143,7 +158,7 @@ a:active { color: white; }
     position: absolute;
     bottom: 0;
     background: #49B4B2;
-    height: 230px;
+    height: 11.5rem;
 }
 
 .current-position {
@@ -154,37 +169,45 @@ a:active { color: white; }
     align-items: center;
 }
 
-.current-position .airport {
-    width: 80px;
-    height: 80px;
-    padding: 0 1rem 0 0;
-    background: url("assets/img-airport.png") no-repeat;
-    background-size: contain;
-}
+    .current-position .airport {
+        width: 65px;
+        height: 65px;
+        padding: 0 1rem 0 0;
+        background: url("assets/img-airport.png") no-repeat;
+        background-size: contain;
+    }
 
-.current-position .metro {
-    width: 80px;
-    height: 80px;
-    padding: 0 1rem 0 0;
-    background: url("assets/img-metro.png") no-repeat;
-    background-size: contain;
-}
+    .current-position .metro {
+        width: 65px;
+        height: 65px;
+        padding: 0 1rem 0 0;
+        background: url("assets/img-metro.png") no-repeat;
+        background-size: contain;
+    }
 
-.current-position .taxi {
-    width: 80px;
-    height: 80px;
-    padding: 0 1rem 0 0;
-    background: url("assets/img-taxi.png") no-repeat;
-    background-size: contain;
-}
+    .current-position .taxi {
+        width: 65px;
+        height: 65px;
+        padding: 0 1rem 0 0;
+        background: url("assets/img-taxi.png") no-repeat;
+        background-size: contain;
+    }
 
-.current-position .hotel {
-    width: 80px;
-    height: 80px;
-    padding: 0 1rem 0 0;
-    background: url("assets/img-hotel.png") no-repeat;
-    background-size: contain;
-}
+    .current-position .hotel {
+        width: 65px;
+        height: 65px;
+        padding: 0 1rem 0 0;
+        background: url("assets/img-hotel.png") no-repeat;
+        background-size: contain;
+    }
+
+    .current-position .hotel {
+        width: 65px;
+        height: 65px;
+        padding: 0 1rem 0 0;
+        background: url("assets/img-restaurant.png") no-repeat;
+        background-size: contain;
+    }
 
 .position-name {
     font-size: 2rem;
@@ -203,53 +226,54 @@ a:active { color: white; }
     flex-direction: row;
     align-items: center;
     justify-content: left;
-    padding: 0.5rem;
+    /* padding: 0.5rem; */
+    zoom: 0.9;
 }
 
 
-.position-selection .item {
-    flex: 1 0 auto;
-    min-width: 75px;
-    min-height: 75px;
-}
+    .position-selection .item {
+        flex: 1 0 auto;
+        min-width: 75px;
+        min-height: 75px;
+    }
 
 
 
 
-.position-selection .pos0 {
-    width: 35px;
-    height: 35px;
-    padding-bottom: 12px;
-    background: url("assets/img-stage1_green.png") no-repeat;
-}
+    .position-selection .pos0 {
+        width: 35px;
+        height: 35px;
+        padding-bottom: 12px;
+        background: url("assets/img-stage1_green.png") no-repeat;
+    }
 
-.position-selection .pos1 {
-    width: 35px;
-    height: 35px;
-    padding-bottom: 12px;
-    background: url("assets/img-stage2_green.png") no-repeat;
-}
+    .position-selection .pos1 {
+        width: 35px;
+        height: 35px;
+        padding-bottom: 12px;
+        background: url("assets/img-stage2_green.png") no-repeat;
+    }
 
-.position-selection .pos2 {
-    width: 35px;
-    height: 35px;
-    padding-bottom: 12px;
-    background: url("assets/img-stage3_green.png") no-repeat;
-}
+    .position-selection .pos2 {
+        width: 35px;
+        height: 35px;
+        padding-bottom: 12px;
+        background: url("assets/img-stage3_green.png") no-repeat;
+    }
 
-.position-selection .pos3 {
-    width: 35px;
-    height: 35px;
-    padding-bottom: 12px;
-    background: url("assets/img-stage4_green.png") no-repeat;
-}
+    .position-selection .pos3 {
+        width: 35px;
+        height: 35px;
+        padding-bottom: 12px;
+        background: url("assets/img-stage4_green.png") no-repeat;
+    }
 
-.position-selection .pos4 {
-    width: 35px;
-    height: 35px;
-    padding-bottom: 12px;
-    background: url("assets/img-stage5_green.png") no-repeat;
-}
+    .position-selection .pos4 {
+        width: 35px;
+        height: 35px;
+        padding-bottom: 12px;
+        background: url("assets/img-stage5_green.png") no-repeat;
+    }
 
 .active .pos0 {
     background: url("assets/img-stage1_yellow.png") no-repeat;
@@ -305,10 +329,10 @@ a:active { color: white; }
 .position-selection .icon-restaurant {
     width: 55px;
     height: 55px;
-    background: url("assets/img-hotel_green.png") no-repeat;
+    background: url("assets/img-restaurant_green.png") no-repeat;
 }
 
-.active .icon-airport{
+.active .icon-airport {
     background: url("assets/img-airport_yellow.png") no-repeat;
 }
 
@@ -328,10 +352,10 @@ a:active { color: white; }
     background: url("assets/img-hotel_yellow.png") no-repeat;
 }
 
-.active .icon-hotel {
+.active .icon-restaurant {
     width: 55px;
     height: 55px;
-    background: url("assets/img-hotel_yellow.png") no-repeat;
+    background: url("assets/img-restaurant_yellow.png") no-repeat;
 }
 
 .location-details {
@@ -352,14 +376,13 @@ a:active { color: white; }
     width: 60px;
     height: 60px;
     background: url("assets/img-elevator.png") no-repeat;
-
 }
 
 .here-map-box {
     min-width: 640px;
-    min-height: 480px;
+    min-height: 320px;
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     position: absolute;
 }
 
@@ -380,8 +403,14 @@ a:active { color: white; }
     border: #00726e solid 1px;
 }
 
+.thumb-view {
+    position: absolute;
+    right: 2rem;
+    bottom: 15rem;
+    pointer-events: auto;
+}
+
 .enlarged-view {
-    position: fixed;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -390,7 +419,8 @@ a:active { color: white; }
     height: 400px;
     border: #00726e solid 1px;
     padding: 1.5rem;
-    background-color: #00726eab;
+    background-color: #00726ef5;
+    pointer-events: auto;
 }
 
 
@@ -410,52 +440,79 @@ a:active { color: white; }
     border: #00726e solid 1px;
 }
 
-.metro-pic-box {
+.key-pic-metro2 {
+    background: url("key-pic/ZhongSangElevator.jpg") no-repeat;
     width: 100%;
     height: 100%;
+    border: #333333 solid 1px;
+    background-size: contain;
+}
+
+.thumb-key-pic-metro2 {
+    background: url("key-pic/ZhongSangElevator.jpg") no-repeat;
+    background-size: contain;
+    width: 120px;
+    height: 80px;
+    border: #00726e solid 1px;
+}
+
+.metro-pic-box {
+    width: 100%;
+    /* height: 100%; */
     position: absolute;
     overflow: auto;
+    bottom: 11.5rem;
+    top: 0;
 }
 
 .key-thumb-box {
     position: fixed;
-    left: 10px;
-    top: 120px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
 }
 
 .icon-uber {
-    background: url("assets/img-uber-info.png") no-repeat;
-    width: 120px;
-    height: 120px;
-    position: absolute;
-    bottom: 250px;
-    left: 4px;
+    background: url(assets/img-uber-info.png) no-repeat;
+    background-size: contain;
+    width: 60px;
+    height: 60px;
+    position: fixed;
+    bottom: 8.5rem;
+    left: 29rem;
     cursor: pointer;
+    z-index: 100;
 }
 
 .icon-centerMap {
-    background: url("assets/img-dot_green.png") no-repeat;
-    width: 120px;
-    height: 120px;
+    background: url(assets/img-dot_green.png) no-repeat;
+    /* width: 120px; */
+    /* height: 120px; */
     position: absolute;
-    bottom: 250px;
+    bottom: 233px;
     right: 4px;
     cursor: pointer;
+    z-index: 50;
+    padding-left: 18px;
 }
 
-.global-map-box{
-    height: 70%;
+.global-map-box {
     position: absolute;
-    top: 0;
+    top: 1.25rem;
     width: 100%;
+    bottom: 12.8rem;
 }
 
 .icon-taxi-info-box {
-    background: url("assets/img-taxiinfo-01.png") no-repeat;
-    width: 120px;
-    height: 120px;
-    position: absolute;
-    bottom: 240px;
-    left: 120px;
+    background: url("assets/img-infomation_yellow-01.png") no-repeat;
+    background-size: contain;
+    width: 60px;
+    height: 60px;
+    position: fixed;
+    bottom: 8.5rem;
+    left: 35rem;
     cursor: pointer;
+    z-index: 100;
 }
