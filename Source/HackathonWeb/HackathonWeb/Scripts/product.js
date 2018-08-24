@@ -392,10 +392,17 @@ const UberNavView = Vue.component('uber-nav-view',
         methods:{
             onClickUberIcon : function(){
                 var currentPosition = window._app.$data.currentPosition;
-                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]="+currentPosition.latitude+"&pickup[longitude]="+currentPosition.longitude+"&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
+                //window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]="+currentPosition.latitude+"&pickup[longitude]="+currentPosition.longitude+"&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
+                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]=" + currentPosition.latitude + "&pickup[longitude]=" + currentPosition.longitude + "&pickup[nickname]=CurrentPlace&dropoff[latitude]=" + destPosition.latitude + "&dropoff[longitude]=" + destPosition.longitude + "&dropoff[nickname]=Home", "_blank");
             },
             onClickTaxiIcon: function () {
-                this.alert(window._app.$data.taxiInfo[0]);
+                alert(
+                    window.TaxiInfo[0].name +":"+ window.TaxiInfo[0].carTel + "\n" +
+                    window.TaxiInfo[1].name + ":" + window.TaxiInfo[1].carTel + "\n" + 
+                    window.TaxiInfo[2].name + ":" + window.TaxiInfo[2].carTel + "\n" + 
+                    window.TaxiInfo[3].name + ":" + window.TaxiInfo[3].carTel + "\n" + 
+                    window.TaxiInfo[4].name + ":" + window.TaxiInfo[4].carTel + "\n"
+                );
             },
             onClickMap : function(){
                 window._app.$refs.globalMapInstance.centerMaps();
