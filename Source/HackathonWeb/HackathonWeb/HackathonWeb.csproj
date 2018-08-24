@@ -128,6 +128,9 @@
     <Content Include="Scripts\assets\img-metro.png" />
     <Content Include="Scripts\assets\img-metro_green.png" />
     <Content Include="Scripts\assets\img-metro_yellow.png" />
+    <Content Include="Scripts\assets\img-restaurant.png" />
+    <Content Include="Scripts\assets\img-restaurant_green.png" />
+    <Content Include="Scripts\assets\img-restaurant_yellow.png" />
     <Content Include="Scripts\assets\img-stage1_green.png" />
     <Content Include="Scripts\assets\img-stage1_yellow.png" />
     <Content Include="Scripts\assets\img-stage2_green.png" />
