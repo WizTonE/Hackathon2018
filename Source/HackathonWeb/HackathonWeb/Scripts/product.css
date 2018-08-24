@@ -460,23 +460,27 @@ a:active { color: white; }
 }
 
 .icon-uber {
-    background: url("assets/img-uber.png") no-repeat;
-    width: 120px;
-    height: 120px;
-    position: absolute;
-    bottom: 250px;
-    left: 4px;
+    background: url(assets/img-uber.png) no-repeat;
+    background-size: contain;
+    width: 60px;
+    height: 60px;
+    position: fixed;
+    bottom: 8.5rem;
+    left: 29rem;
     cursor: pointer;
+    z-index: 100;
 }
 
 .icon-centerMap {
-    background: url("assets/img-dot_green.png") no-repeat;
-    width: 120px;
-    height: 120px;
+    background: url(assets/img-dot_green.png) no-repeat;
+    /* width: 120px; */
+    /* height: 120px; */
     position: absolute;
-    bottom: 250px;
+    bottom: 233px;
     right: 4px;
     cursor: pointer;
+    z-index: 50;
+    padding-left: 18px;
 }
 
 .global-map-box {
