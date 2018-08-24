@@ -42,6 +42,7 @@
 	var dataPosition = [];
 	var markerLocations = [];
 	var markerContainer = [];
+    var bubbleContainer = [];
 
     // Initialize the platform object:
     var platform = new H.service.Platform({
@@ -75,10 +76,18 @@
 	    center.lat = nowMapCenter.lat;
 	});
 
+    function ClearBubble(address) {
+        for(i = 0; i < bubbleContainer.length; ++i)
+        {
+            bubbleContainer[i].close();
+        }
+    }
+
 	// Add event listener:
 	restaurantMap.addEventListener('pointerup', function(evt) {
 	    // Log 'dragend' and 'mouse' events:
-	    
+	    ClearBubble();
+    
 		if (evt.target.type == 3) {
 		    console.log(evt.type, evt.target.getPosition());
 		    console.log(markerContainer.length);
@@ -102,8 +111,11 @@
 
             // Add info bubble to the UI:
 		    ui.addBubble(bubble);
+            bubbleContainer.push(bubble);
 		}
+        
 	});
+
 
 	restaurantMap.addEventListener('mapviewchangeend', function() {
 	    oldMapZoom = restaurantMap.getZoom(); 
