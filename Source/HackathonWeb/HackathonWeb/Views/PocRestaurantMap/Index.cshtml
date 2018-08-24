@@ -80,6 +80,8 @@
         for(i = 0; i < bubbleContainer.length; ++i)
         {
             bubbleContainer[i].close();
+            bubbleContainer.shift();
+            --i;
         }
     }
 
