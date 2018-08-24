@@ -98,6 +98,37 @@ Vue.component('way-nav-view', {
 
 /**
  *
+ * 關鍵地點的小圖
+ *
+ */
+Vue.component('key-thumbnail',
+    {
+        prop: ["image"],
+
+        data: function() {
+            return {};
+        },
+
+        methods: {
+            getEnlargedStyle: function() {
+                return {};
+            },
+
+            getThumbStyle: function() {
+                return {};
+            }
+        },
+
+        template: '<div class="key-thumb-box">\
+            <div class="enlarged-view" :style="getEnlargedStyle"><div>\
+            <div class="thumb-view" :style="getThumbStyle""><div>\
+        </div>'
+
+
+    });
+
+/**
+ *
  * 首頁
  *
  */
@@ -218,7 +249,7 @@ const MetroNavView = Vue.component('metro-nav-view',
                   <img src="../Scripts/assets/mrt-Zhongshan.png" width="100%" height="100%"> \
                   1.出口電梯：<br>出口4（南京西路北側之淡水線線形公園內）<br>出口5（南京西路與赤峰街交叉東北隅）<br>出口6（南京西路與赤峰街交叉東南隅）<br>2.月臺電梯：<br>淡水信義線：大廳層中央<br>松山新店線：大廳層東側<br>\
                 </div>\
-                <way-nav-view current="0"></way-nav-view>\
+                <way-nav-view current="1"></way-nav-view>\
             </div>'
     });
 
