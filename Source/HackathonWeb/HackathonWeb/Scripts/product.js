@@ -274,6 +274,7 @@ const MetroNavView = Vue.component('metro-nav-view',
                   1.出口電梯：<br>出口4（南京西路北側之淡水線線形公園內）<br>出口5（南京西路與赤峰街交叉東北隅）<br>出口6（南京西路與赤峰街交叉東南隅）<br>2.月臺電梯：<br>淡水信義線：大廳層中央<br>松山新店線：大廳層東側<br>\
                 </div>\
                 <way-nav-view current="1"></way-nav-view>\
+                <key-thumbnail original="key-pic-metro" thumbnail="thumb-key-pic-metro"></key-thumbnail>\
             </div>'
     });
 

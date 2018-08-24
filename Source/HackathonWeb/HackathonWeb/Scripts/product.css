@@ -387,5 +387,23 @@ a:active { color: white; }
     background-color: #00726eab;
 }
 
-.thumb-view {
+.key-thumb-box {
+    
+}
+
+
+.key-pic-metro {
+    background: url("key-pic/elevator-metro.jpg") no-repeat;
+    width: 100%;
+    height: 100%;
+    border: #333333 solid 1px;
+    background-size: contain;
+}
+
+.thumb-key-pic-metro {
+    background: url("key-pic/elevator-metro.jpg") no-repeat;
+    background-size: contain;
+    width: 120px;
+    height: 80px;
+    border: #00726e solid 1px;
 }
