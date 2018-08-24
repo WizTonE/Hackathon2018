@@ -190,8 +190,12 @@ const MetroNavView = Vue.component('metro-nav-view',
         },
         template:
             '<div class="setup-container">\
-                <div>metro nav view</div>\
-                <way-nav-view current="1"></way-nav-view>\
+
+                <div >\
+                  <img src="../Scripts/assets/mrt-Zhongshan.png" width="100%" height="100%"> \
+                  1.出口電梯：<br>出口4（南京西路北側之淡水線線形公園內）<br>出口5（南京西路與赤峰街交叉東北隅）<br>出口6（南京西路與赤峰街交叉東南隅）<br>2.月臺電梯：<br>淡水信義線：大廳層中央<br>松山新店線：大廳層東側<br>\
+                </div>\
+
             </div>'
     });
 
@@ -209,10 +213,12 @@ const UberNavView = Vue.component('uber-nav-view',
             }
         },
         template:
+
             '<div class="setup-container">\
                 <div>uber nav view</div>\
                 <way-nav-view current="2"></way-nav-view>\
             </div>'
+
     });
 
 
