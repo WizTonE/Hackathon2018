@@ -42,6 +42,7 @@
 	var dataPosition = [];
 	var markerLocations = [];
 	var markerContainer = [];
+    var bubbleContainer = [];
 
     // Initialize the platform object:
     var platform = new H.service.Platform({
@@ -75,10 +76,20 @@
 	    center.lat = nowMapCenter.lat;
 	});
 
+    function ClearBubble(address) {
+        for(i = 0; i < bubbleContainer.length; ++i)
+        {
+            bubbleContainer[i].close();
+            bubbleContainer.shift();
+            --i;
+        }
+    }
+
 	// Add event listener:
 	restaurantMap.addEventListener('pointerup', function(evt) {
 	    // Log 'dragend' and 'mouse' events:
-	    
+	    ClearBubble();
+    
 		if (evt.target.type == 3) {
 		    console.log(evt.type, evt.target.getPosition());
 		    console.log(markerContainer.length);
@@ -102,8 +113,11 @@
 
             // Add info bubble to the UI:
 		    ui.addBubble(bubble);
+            bubbleContainer.push(bubble);
 		}
+        
 	});
+
 
 	restaurantMap.addEventListener('mapviewchangeend', function() {
 	    oldMapZoom = restaurantMap.getZoom(); 
@@ -211,8 +225,9 @@
     }
 	
     function RefreshMarker() {
+        markerLocations = [];
         dataPosition.sort(function(a, b){return 0.5 - Math.random()});
-        for (i = 0; i < maxMarker; ++i) {
+        for (i = 0; i < dataPosition.length; ++i) {
 
             //alert(dataPosition[i].lat);
             //alert(dataPosition[i].lng);
@@ -229,6 +244,10 @@
 				markerLocations.push(dataPosition[i]);
             }
 
+            if(markerLocations.length > maxMarker)
+            {
+                break;
+            }
         }
 
         console.log(dataPosition.length);
