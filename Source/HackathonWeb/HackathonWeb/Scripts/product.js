@@ -96,6 +96,24 @@ Vue.component('way-nav-view', {
 
 });
 
+Vue.component('here-map1',
+    {
+        props:['mapDivId'],
+
+        data: function() {
+            return {}
+        },
+
+        mounted: function () {
+            // call map init on layout 
+            window.setupHereMap(this.mapDivId);
+
+        },
+
+        template: '<div :id="mapDivId" class="here-map-box"></div>'
+
+    });
+
 /**
  *
  * 首頁
@@ -165,7 +183,10 @@ const SetupView = Vue.component('setup-view',
             }
         },
         template:
-            '<div class="setup-container"><div>Setup your address here. Show HERE(tm) map here. Show the route here.</div></div>'
+            '<div class="setup-container">\
+                <div>Setup your address here. Show HERE(tm) map here. Show the route here.</div>\
+                <here-map1 map-div-id="setupViewMap"></here-map1>\
+            </div>'
     });
 
 /**

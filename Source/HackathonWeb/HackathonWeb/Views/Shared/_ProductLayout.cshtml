@@ -18,18 +18,22 @@
     <link rel="stylesheet" type="text/css"
           href="http://js.api.here.com/v3/3.0/mapsjs-ui.css" />
     <script type="text/javascript" charset="utf-8">
-        var mapConfiguration = {
-            'app_id': '9shB49HQGahETgr6LWDZ',
-            'app_code': '3CPwa96KM9xO-Z90EOBNig'
+        var map = {
+            configuration: {
+                'app_id': '9shB49HQGahETgr6LWDZ',
+                'app_code': '3CPwa96KM9xO-Z90EOBNig'
+            },
+            platform: {},
+            maptypes: {},
+            instance: {}
         };
 
-        function setupHereMap(elementId, mapInitArgs) {
-            var platform = new H.service.Platform(mapConfiguration);
-            var maptypes = platform.createDefaultLayers();
-            var map = new H.Map(
+        function setupHereMap(elementId) {
+            map.platform = new H.service.Platform(map.configuration);
+            map.maptypes = map.platform.createDefaultLayers();
+            map.instance = new H.Map(
                 document.getElementById(elementId),
-                maptypes.normal.map,
-                mapInitArgs);
+                map.maptypes.normal.map);
             return map;
         }
     </script>
