@@ -16,7 +16,7 @@ namespace HackathonWeb
 
         private List<MRTElevator> _mRTElevators;
         public List<MRTElevator> MRTElevators => _mRTElevators ?? (
-            _mRTElevators = File.ReadAllLines(HttpContext.Current.Server.MapPath("OpenDataSource/MRTElevators.csv")).Select(item =>
+            _mRTElevators = File.ReadAllLines(HttpContext.Current.Server.MapPath("~/OpenDataSource/MRTElevators.csv")).Select(item =>
             {
                 var data = item.Split(',');
                 return new MRTElevator { Line = data[0], Station = data[1], Location = data[2] };
@@ -24,7 +24,7 @@ namespace HackathonWeb
 
         private List<Restaurant> _restaurants;
         public List<Restaurant> Restaurants =>  _restaurants ?? (
-            _restaurants = File.ReadAllLines(HttpContext.Current.Server.MapPath("OpenDataSource/res_tpe_opendata.csv")).Select(item =>
+            _restaurants = File.ReadAllLines(HttpContext.Current.Server.MapPath("~/OpenDataSource/res_tpe_opendata.csv")).Select(item =>
             {
                 var data = item.Split(',');
                 return new Restaurant
@@ -52,7 +52,7 @@ namespace HackathonWeb
 
         private List<Hotel> _hotels;
         public List<Hotel> Hotels => _hotels?? (
-            _hotels = JsonConvert.DeserializeObject<List<Hotel>>(File.ReadAllText(HttpContext.Current.Server.MapPath("OpenDataSource/Hotel.json"))));
+            _hotels = JsonConvert.DeserializeObject<List<Hotel>>(File.ReadAllText(HttpContext.Current.Server.MapPath("~/OpenDataSource/Hotel.json"))));
 
         private OpenDataStorage()
         {

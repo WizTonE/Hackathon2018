@@ -1,0 +1,41 @@
+﻿@model HackathonWeb.Models.ProductModel
+
+@{
+    ViewBag.Title = "Product Home";
+    Layout = "~/Views/Shared/_ProductLayout.cshtml";
+}
+
+<div id="app" class="main-app-container">
+    <div class="app-title"><span class="app-tag-line">{{ tagLine }}. CodeMonkey @@ 2018 Hackthon</span><small> ( {{ latitude }} | {{ longitude }} )</small></div>
+    
+
+
+    
+    <!-- route outlet -->
+    <!-- component matched by the route will render here -->
+    <div id="app-content" class="content-view">
+        <router-view></router-view>
+    </div>
+    
+    <div id="app-nav" class="nav-view-box">
+
+
+        <div class="nav-items-box">
+            <span class="nav-button"><router-link to="/home">Home</router-link></span>
+            <span class="nav-button"><router-link to="/language">Language</router-link></span>
+            <span class="nav-button"><router-link to="/setup">Setup</router-link></span>
+            <span class="nav-button"><router-link to="/airport">Airport</router-link></span>
+            <span class="nav-button"><router-link to="/metro">Metro</router-link></span>
+            <span class="nav-button"><router-link to="/taxi">Taxi</router-link></span>
+            <span class="nav-button"><router-link to="/hotel">hotel</router-link></span>
+            <span class="nav-button"><router-link to="/feedback">Feedback</router-link></span>
+            <span class="nav-button"><router-link to="/restaurant">Restaurant</router-link></span>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script type="text/javascript" src="~/Scripts/product.js"></script>
