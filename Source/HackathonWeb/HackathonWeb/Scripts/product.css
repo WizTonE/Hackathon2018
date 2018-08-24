@@ -134,8 +134,11 @@ a:active { color: white; }
 
 .map-view {
     width: 100%;
-    
+    position: absolute;
+    top: 0;
+    bottom: 235px;
 }
+
 
 .way-nav-box {
     width: 100%;
@@ -143,6 +146,7 @@ a:active { color: white; }
     position: absolute;
     bottom: 0;
     background: #49B4B2;
+    height: 230px;
 }
 
 .current-position {
@@ -154,31 +158,35 @@ a:active { color: white; }
 }
 
 .current-position .airport {
-    width: 120px;
-    height: 120px;
+    width: 80px;
+    height: 80px;
     padding: 0 1rem 0 0;
     background: url("assets/img-airport.png") no-repeat;
+    background-size: contain;
 }
 
 .current-position .metro {
-    width: 120px;
-    height: 120px;
+    width: 80px;
+    height: 80px;
     padding: 0 1rem 0 0;
     background: url("assets/img-metro.png") no-repeat;
+    background-size: contain;
 }
 
 .current-position .taxi {
-    width: 120px;
-    height: 120px;
+    width: 80px;
+    height: 80px;
     padding: 0 1rem 0 0;
     background: url("assets/img-taxi.png") no-repeat;
+    background-size: contain;
 }
 
 .current-position .hotel {
-    width: 120px;
-    height: 120px;
+    width: 80px;
+    height: 80px;
     padding: 0 1rem 0 0;
     background: url("assets/img-hotel.png") no-repeat;
+    background-size: contain;
 }
 
 .position-name {
@@ -198,7 +206,7 @@ a:active { color: white; }
     flex-direction: row;
     align-items: center;
     justify-content: left;
-    padding: 1rem;
+    padding: 0.5rem;
 }
 
 
@@ -333,6 +341,7 @@ a:active { color: white; }
     color: #00726E;
     font-weight: bold;
     padding: 1rem;
+    display: none;
 }
 
 
@@ -387,10 +396,6 @@ a:active { color: white; }
     background-color: #00726eab;
 }
 
-.key-thumb-box {
-    
-}
-
 
 .key-pic-metro {
     background: url("key-pic/elevator-metro.jpg") no-repeat;
@@ -406,4 +411,17 @@ a:active { color: white; }
     width: 120px;
     height: 80px;
     border: #00726e solid 1px;
+}
+
+.metro-pic-box {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    overflow: auto;
+}
+
+.key-thumb-box {
+    position: fixed;
+    left: 10px;
+    top: 120px;
 }
