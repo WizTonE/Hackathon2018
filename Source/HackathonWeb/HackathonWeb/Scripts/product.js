@@ -127,8 +127,8 @@ Vue.component('here-map1',
             },
             centerMaps: function(){
                 window._app.getGeoLocation();
-                var latitude = window._app.$data.latitude;
-                var longitude = window._app.$data.longitude;
+                var latitude = window._app.$data.currentPosition.latitude;
+                var longitude = window._app.$data.currentPosition.longitude;
                 var cord = {lat: latitude, lng: longitude}
                 map.instance.setCenter(cord);
                 map.instance.setZoom(17);
@@ -336,7 +336,7 @@ const AirportNavView = Vue.component('airport-nav-view',
 
         computed: {
             geo: function() {
-                return window._app ? window._app.$data.latitude : "";
+                return window._app ? window._app.$data.currentPosition : "";
 
             }
 
@@ -391,9 +391,8 @@ const UberNavView = Vue.component('uber-nav-view',
 
         methods:{
             onClickIcon : function(){
-                var latitude = window._app.$data.latitude;
-                var longitude = window._app.$data.longitude;
-                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]="+latitude+"&pickup[longitude]="+longitude+"&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
+                var currentPosition = window._app.$data.currentPosition;
+                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]="+currentPosition.latitude+"&pickup[longitude]="+currentPosition.longitude+"&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
             },
             onClickMap : function(){
                 window._app.$refs.globalMapInstance.centerMaps();
@@ -508,11 +507,14 @@ const app = window._app =  new Vue({
     el: "#app",
     router,
 
+    
+
     data: {
         tagLine: "Always on the right track",
-        latitude: 0,
-        longitude: 0,
-        isMapVisible: true
+        currentPosition: {longitude:0,latitude:0},
+        destPosition: {longitude:0,latitude:0},
+        isMapVisible: true,
+        geoLocIntervalId: -1
 
     },
 
@@ -526,28 +528,23 @@ const app = window._app =  new Vue({
         getGeoLocation: function () {
             var that = this;
             navigator.geolocation.getCurrentPosition(function (position) {
-                that.longitude = position.coords.longitude;
-                that.latitude = position.coords.latitude;
+                that.$data.currentPosition.longitude = position.coords.longitude;
+                that.$data.currentPosition.latitude = position.coords.latitude;
             });
         },
         raiseEvent: function() {
-            var event = new CustomEvent('location', {detail: {lat: this.$data.latitude, lng: this.$data.longitude}});
+            var event = new CustomEvent('location', {detail: {lat: this.$data.currentPosition.latitude, lng: this.$data.currentPosition.longitude}});
             document.dispatchEvent(event);
         }
-        
     },
 
     mounted: function() {
         this.getGeoLocation();
+        var that = this;
+        this.geoLocIntervalId = setInterval( function(){ 
+            that.getGeoLocation();
+        } , 3000 )
+
     },
-
-    watch: {
-        latitude: function(v) { this.raiseEvent(); }, 
-        longitude: function(v) { this.raiseEvent(); }
-    }
-
-    
-
-
 });
 
