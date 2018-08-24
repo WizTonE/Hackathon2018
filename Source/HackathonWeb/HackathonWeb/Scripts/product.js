@@ -108,22 +108,42 @@ Vue.component('here-map1',
 
         mounted: function () {
             // call map init on layout 
-            this.$data.map = window.setupHereMap(this.mapDivId);
+            this.map = window.setupHereMap(this.mapDivId);
         },
 
         template: '<div :id="mapDivId" class="here-map-box global-map-box"></div>',
 
         methods: {
+            removePoints: function(...p) {
+                for(var i=0; i<p.length; i++) {
+                    this.map.instance.removeObject(p[i]);
+                }
+            },
             createPoints: function(...p) {
-                map.instance.removeObjects(map.instance.getObjects());
                 for(var i=0; i<p.length; i++) {
                     position = {
-                        lat: p[i].location.lat,
-                        lng: p[i].location.lng
+                        lat: p[i].Location.DisplayPosition.Latitude,
+                        lng: p[i].Location.DisplayPosition.Longitude
                     };
-                    marker = new H.map.Marker(position);
-                    this.$data.map.instance.addObject(marker);
+                    marker = new H.map.DomMarker(position);
+                    this.map.instance.addObject(marker);
                 }
+                return p;
+            }, 
+            createGroupPoints: function(group, ...p) {
+                if(group == undefined || group == null) {
+                    group = new H.map.Group();
+                    this.map.instance.addObject(group);
+                }
+                for(var i=0; i<p.length; i++) {
+                    position = {
+                        lat: p[i].Location.DisplayPosition.Latitude,
+                        lng: p[i].Location.DisplayPosition.Longitude
+                    };
+                    var marker = new H.map.DomMarker(position);
+                    group.addObject(marker);
+                }
+                return group;
             },
             centerMaps: function(){
                 window._app.getGeoLocation();
@@ -261,61 +281,95 @@ const SetupView = Vue.component('setup-view',
     {
         data: function() {
             return {
-                address: "",
-                message: ""
+                searchText: '',
+                message: '',
+                hotel: '',
+                address: '',
+                mapObj: {}
             }
         },
         template:
-            '<div class="setup-container">\
-                <div><input v-model="address" /><button v-on:click="onClick">Locate!</button>{{ message }}</div>\
-            </div>',
+            `<div class="setup-container">
+                <div>
+                    <input v-model="searchText" v-on:keydown="keyDown" />
+                </div>
+                <div class="map-view"></div>
+                <div class="info-view">
+                    <div id="message"> {{ message }}</div>
+                    <div id="hotel">Hotel: {{ hotel }}</div>
+                    <div id="address">Address: {{ address }}</div>
+                </div>
+            </div>`,
         methods: {
-            onClick: function() {
-                // Search map
-                var hereMap = this.$refs.hereMap; 
-                var map = hereMap.$data.map;
-                var geoParameters = {
-                    searchText: this.$data.address
-                };
+            search: function() {
+                var geoParameters = { searchText: this.searchText };
+                var model = this;
                 var onResult = function(result) {
+                    if(result.Response == undefined || result.Response.View.length == 0)
+                        return;
                     var locations = result.Response.View[0].Result,
                         position,
                         marker;
 
                     if(locations.length == 0) {
-                        showMessage("No location found.");
+                        model.message = "No result found.";
                     }
                     else if(locations.length > 1) {
-                        showMessage("More than one result found, please select the location."); 
-                        hereMap.createPoints({lng: 100.000, lat: 25.000});                 
-                    } 
+                        model.message = "too much results found."
+                        model.removeExists();
+                        group = new H.map.Group();
+                        model.hereMap.addObject(group);
+                        group.addEventListener('tap', function(evt) {
+                            model.setHotel(evt.target.getData());
+                        });
+                        for(var i=0; i<locations.length; i++) {
+                            position = {
+                                lat: locations[i].Location.DisplayPosition.Latitude,
+                                lng: locations[i].Location.DisplayPosition.Longitude
+                            };
+                            var marker = new H.map.Marker(position);
+                            marker.setData(locations[i]);
+                            group.addObject(marker);
+                        }
+                        model.mapObj = group;
+                    }
                     else {
-                        hereMap.createPoints({lng: 100.000, lat: 25.000});
+                        model.setHotel(locations[0]);
                     }
-                    
-
-/*
-                    for (i = 0;  i < locations.length; i++) {
-                        position = {
-                            lat: locations[i].Location.DisplayPosition.Latitude,
-                            lng: locations[i].Location.DisplayPosition.Longitude
-                        };
-                        marker = new H.map.Marker(position);
-                        map.instance.addObject(marker);
-                    }
-*/                };
+                };
                 var geocoder = map.platform.getGeocodingService();
                 geocoder.geocode(geoParameters, onResult, function(e) {
-                    alert(e);
+                    model.message = e.message;
                 });
-            }, 
-            showMesage: function(m) {
-                message = m;
+            },
+            keyDown: function(ev) {
+                if(ev.which == 13 || ev.keyCode == 13)
+                    this.search();
+            },
+            setHotel: function(m) {
+                this.removeExists();
+                var location = {
+                    lat: m.Location.DisplayPosition.Latitude,
+                    lng: m.Location.DisplayPosition.Longitude
+                };
+                var marker = new H.map.DomMarker(location);
+                this.hereMap.addObjects(marker);
+            },
+            removeExists: function() {
+                if(this.mapObj != null)
+                   this.hereMap.removeObject(this.mapObj);
             }
-
-            
-
-            
+        },
+        computed: {
+            mapObject: function() {
+                return window._app.$refs.globalMapInstance;
+            },
+            map: function() {
+                return this.mapObject.$data.map;
+            },
+            hereMap: function() {
+                return this.map.instance;
+            }
         }
     });
 

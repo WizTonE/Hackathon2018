@@ -449,3 +449,11 @@ a:active { color: white; }
     top: 0;
     width: 100%;
 }
+
+.setup-container {
+    height: 20%;
+    top: 85%;
+    position: absolute;
+    background-color:red;
+    width: 100%;
+}
