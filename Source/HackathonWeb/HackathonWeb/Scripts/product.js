@@ -399,6 +399,10 @@ const UberNavView = Vue.component('uber-nav-view',
             }
         },
 
+        created: function () {
+            window._app.$data.isMapVisible = true;
+        },
+
         template:
 
             '<div class="setup-container">\
