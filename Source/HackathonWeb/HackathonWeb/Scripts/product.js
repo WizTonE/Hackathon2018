@@ -20,9 +20,24 @@ Vue.component('way-nav-view', {
     data: function () {
         return {
 
-            iconNames: ["airport", "metro", "taxi", "hotel"],
-            positionNames: ["Taiwan Taoyuan International Airport", "Taipei Metro System", "Accessible Taxi Driver", "Your Hotel"],
-            positionAddress: ["No. 9, Hangzhan S. Rd., Dayuan Dist., Taoyuan City", "On The Right Track", "By Your Side", "Your Hotel Address"]
+            iconNames: [
+                "airport",
+                "metro",
+                "taxi",
+                "hotel",
+                "hotel"],
+            positionNames: [
+                "Taiwan Taoyuan International Airport",
+                "Taipei Metro System",
+                "Accessible Taxi Driver",
+                "Your Hotel",
+                "Your Restaurant"],
+            positionAddress: [
+                "No. 9, Hangzhan S. Rd., Dayuan Dist., Taoyuan City",
+                "On The Right Track",
+                "By Your Side",
+                "Your Hotel Address",
+                "Your Restaurant Address"]
 
         } 
     },
