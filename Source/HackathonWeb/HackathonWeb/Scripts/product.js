@@ -287,7 +287,8 @@ const SetupView = Vue.component('setup-view',
                 hotel: '',
                 address: '',
                 geo: null,
-                mapGroup: null
+                mapGroup: null,
+                routeGroup: []
             }
         },
         template:
@@ -295,7 +296,7 @@ const SetupView = Vue.component('setup-view',
                 <div>
                     <div id="address-search">Address: <input v-model="saddress" v-on:keydown="keyDownAddress" /></div>
                     <div id="place-search">Place: <input v-model="splace" v-on:keydown="keyDownPlace" /></div>
-                    <div v-if="isShowNext"><button>Next</button></div>
+                    <div v-if="isShowNext"><button v-on:click="nextClick">Next</button></div>
                 </div>
                 <div class="map-view"></div>
                 <div class="info-view">
@@ -395,6 +396,66 @@ const SetupView = Vue.component('setup-view',
                 this.hotel = m.title;
                 this.address = m.address;
                 this.geo = m.geo;
+
+
+
+                //set navi
+                var current = window._app.$data.currentPosition;
+                var routeParameters = {
+                    mode: 'fastest;pedestrian', 
+                    waypoint0: 'geo!' + current.latitude + ',' + current.longitude,
+                    waypoint1: 'geo!' + m.geo.latitude + ',' + m.geo.longtitude,
+                    representation: 'display'
+                };
+                var model = this;
+                var onRouteResult = function(result) {
+                    var route,
+                        routeShape,
+                        startPoint,
+                        endPoint,
+                        linestring;
+                    if (result.response != undefined && result.response.route) {
+                        route = result.response.route[0];
+                        routeShape = route.shape;
+                        linestring = new H.geo.LineString();
+                        routeShape.forEach(function (point) {
+                            var parts = point.split(',');
+                            linestring.pushLatLngAlt(parts[0], parts[1]);
+                        });
+
+                        startPoint = route.waypoint[0].mappedPosition;
+                        endPoint = route.waypoint[1].mappedPosition;
+
+                        routeLine = new H.map.Polyline(linestring, {
+                            style: { lineWidth: 10 },
+                            arrows: { fillColor: 'white', frequency: 2, width: 0.8, length: 0.7 }
+                        });
+
+                        // Create a marker for the start point:
+                        var startMarker = new H.map.Marker({
+                            lat: startPoint.latitude,
+                            lng: startPoint.longitude
+                        });
+
+                        var endMarker = new H.map.Marker({
+                            lat: endPoint.latitude,
+                            lng: endPoint.longitude
+                        });
+
+                        // Add the route polyline and the two markers to the map:
+                        model.routeGroup = [routeLine, startMarker, endMarker];
+                        model.hereMap.addObjects(model.routeGroup);
+                        
+
+                        // Set the map's viewport to make the whole route visible:
+                        model.hereMap.setViewBounds(routeLine.getBounds());
+                   }
+                };
+                var router = this.map.platform.getRoutingService();
+                router.calculateRoute(routeParameters, onRouteResult,
+                    function (error) {
+                        alert(error.message);
+                    });
             },
             removeExists: function() {
                 if(this.mapGroup != null || this.mapGroup != undefined) {
@@ -404,6 +465,12 @@ const SetupView = Vue.component('setup-view',
                             this.mapGroup.removeObject(objs[i]);
                     }
                 }
+                if(this.routeGroup.length > 0){
+                    for(var i=0; i<this.routeGroup.length; i++)
+                        this.hereMap.removeObject(this.routeGroup[i]);
+                    this.routeGroup = [];
+                }
+                
             },
             nextClick: function() {
                 window._app.$data.destPosition = {longitude:this.geo.lat,latitude:this.geo.lng};
