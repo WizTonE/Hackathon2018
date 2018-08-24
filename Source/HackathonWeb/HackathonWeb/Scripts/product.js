@@ -390,9 +390,13 @@ const UberNavView = Vue.component('uber-nav-view',
         },
 
         methods:{
-            onClickIcon : function(){
+            onClickUberIcon : function(){
                 var currentPosition = window._app.$data.currentPosition;
                 window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]="+currentPosition.latitude+"&pickup[longitude]="+currentPosition.longitude+"&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
+            },
+            onClickTaxiIcon: function () {
+                var currentPosition = window._app.$data.currentPosition;
+                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]=" + currentPosition.latitude + "&pickup[longitude]=" + currentPosition.longitude + "&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
             },
             onClickMap : function(){
                 window._app.$refs.globalMapInstance.centerMaps();
@@ -406,7 +410,8 @@ const UberNavView = Vue.component('uber-nav-view',
         template:
 
             '<div class="setup-container">\
-                <span class="icon-uber" v-on:click="onClickIcon"></span>\
+                <span class="icon-uber" v-on:click="onClickUberIcon"></span>\
+                <span class="icon-taxi-info-box" v-on:click="onClickTaxiIcon"></span>\
                 <span class="icon-centerMap" v-on:click="onClickMap">Center </span>\
                 <way-nav-view current="2"></way-nav-view>\
             </div>'

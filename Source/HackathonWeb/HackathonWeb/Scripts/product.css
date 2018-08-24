@@ -424,7 +424,7 @@ a:active { color: white; }
 }
 
 .icon-uber {
-    background: url("assets/img-uber.png") no-repeat;
+    background: url("assets/img-uber-info.png") no-repeat;
     width: 120px;
     height: 120px;
     position: absolute;
@@ -448,4 +448,14 @@ a:active { color: white; }
     position: absolute;
     top: 0;
     width: 100%;
+}
+
+.icon-taxi-info-box {
+    background: url("assets/img-taxiinfo-01.png") no-repeat;
+    width: 120px;
+    height: 120px;
+    position: absolute;
+    bottom: 240px;
+    left: 120px;
+    cursor: pointer;
 }
