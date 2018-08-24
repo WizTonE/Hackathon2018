@@ -109,7 +109,7 @@ a:active { color: white; }
     height: 100%;
     position: relative;
     background: url("assets/bg-green-01.png") no-repeat;
-    background-position: cover;
+    background-size: cover;
 
     display: flex;
     flex-direction: column;
@@ -119,9 +119,13 @@ a:active { color: white; }
 .language-item {
     color: white;
     font-weight: bold;
-    font-size: 1.5em;
+    font-size: 3.5rem;
     text-align: left;
-    padding: 0.5em;
+    padding: 1rem;
+    border-bottom: #eeeeee;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    cursor: pointer;
     
 }
 

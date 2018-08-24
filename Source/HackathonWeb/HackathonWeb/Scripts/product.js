@@ -118,12 +118,20 @@ const LanguageView = Vue.component('language-view',
     {
         data: function() {
             return {
-                options: ["ENGLISH", "JAPANESE", "KOREA"]
+                options: ["ENGLISH", "日本", "대한민국"]
 
             }
         },
+
+        methods: {
+            onClickLang: function() {
+                this.$router.push("setup");
+            }
+
+        },
+
         template:
-            '<div class="language-container"><div class="language-item" v-for="option in options"> {{ option }}</div></div>'
+            '<div class="language-container"><div class="language-item" v-for="option in options" v-on:click=onClickLang> {{ option }}</div></div>'
     });
 
 /**
@@ -291,6 +299,7 @@ const RestaurantView = Vue.component('restaurant-view',
  *
  */
 const productDefaultRoutes = [
+    { path: '/', component: HomeView },
     { path: '/home', component: HomeView },
     { path: '/language', component: LanguageView },
     { path: '/setup', component: SetupView },
