@@ -443,9 +443,11 @@ a:active { color: white; }
 
 .metro-pic-box {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     position: absolute;
     overflow: auto;
+    bottom: 11.5rem;
+    top: 0;
 }
 
 .key-thumb-box {
