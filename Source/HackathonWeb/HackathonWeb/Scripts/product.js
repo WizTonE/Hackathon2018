@@ -291,12 +291,20 @@ const UberNavView = Vue.component('uber-nav-view',
             return {
             }
         },
+
+        methods:{
+            onClickIcon : function(){
+                var latitude = window._app.$data.latitude;
+                var longitude = window._app.$data.longitude;
+                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]="+latitude+"&pickup[longitude]="+longitude+"&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
+            }
+        },
+
         template:
 
             '<div class="setup-container">\
-                <div class="map-view">\
-                    <div><div><iframe width="100%" height="1500" src="https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]=25.077883&pickup[longitude]=121.5727394&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home" frameborder="0" allowfullscreen></iframe></div></div>\
-                </div>\
+                <here-map1 map-div-id="setupViewMap"></here-map1>\
+                <span class="icon-uber" v-on:click="onClickIcon"></span>\
                 <way-nav-view current="2"></way-nav-view>\
             </div>'
     });
