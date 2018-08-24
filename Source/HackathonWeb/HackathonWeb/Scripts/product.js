@@ -48,7 +48,7 @@ Vue.component('way-nav-view', {
     methods: {
 
         onClickIcon: function (index) {
-            const viewNames = ["airport", "metro", "taxi", "hotel"];
+            const viewNames = ["airport", "metro", "taxi", "hotel", "restaurant"];
             this.$router.push(viewNames[index]);
         }
 
@@ -67,6 +67,7 @@ Vue.component('way-nav-view', {
         <div class="item metro" :class="{active : current == 1}" v-on:click="onClickIcon(1)"><div class="pos1"></div><div class="icon-metro"></div></div>\
         <div class="item taxi" :class="{active : current == 2}" v-on:click="onClickIcon(2)"><div class="pos2"></div><div class="icon-taxi"></div></div>\
         <div class="item hotel" :class="{active : current == 3}" v-on:click="onClickIcon(3)"><div class="pos3"></div><div class="icon-hotel"></div></div>\
+        <div class="item restaurant" :class="{active : current == 4}" v-on:click="onClickIcon(4)"><div class="pos4"></div><div class="icon-restaurant"></div></div>\
     </div>\
     <div class="location-details">\
         <div>Location Detail</div>\
@@ -212,9 +213,12 @@ const UberNavView = Vue.component('uber-nav-view',
             }
         },
         template:
-
-            '' 
-
+            '<div class="setup-container">\
+                <div>\
+                    <div class="setup-container"><div><iframe width="100%" height="1500" src="https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]=25.077883&pickup[longitude]=121.5727394&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home" frameborder="0" allowfullscreen></iframe></div></div>\
+                </div>\
+                <way-nav-view current="2"></way-nav-view>\
+            </div>'
     });
 
 
@@ -269,7 +273,10 @@ const RestaurantView = Vue.component('restaurant-view',
             }
         },
         template:
-            '<div class="setup-container"><div>restaurant view</div></div>'
+            '<div class="setup-container">\
+                <div>restaurant view</div>\
+                <way-nav-view current="4"></way-nav-view>\
+            </div>'
     });
 
 
