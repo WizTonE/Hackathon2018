@@ -111,7 +111,7 @@ Vue.component('here-map1',
             this.$data.map = window.setupHereMap(this.mapDivId);
         },
 
-        template: '<div :id="mapDivId" class="here-map-box"></div>',
+        template: '<div :id="mapDivId" class="here-map-box global-map-box"></div>',
 
         methods: {
             createPoints: function(...p) {
@@ -124,6 +124,40 @@ Vue.component('here-map1',
                     marker = new H.map.Marker(position);
                     this.$data.map.instance.addObject(marker);
                 }
+            },
+            centerMaps: function(){
+                window._app.getGeoLocation();
+                var latitude = window._app.$data.latitude;
+                var longitude = window._app.$data.longitude;
+                var cord = {lat: latitude, lng: longitude}
+                map.instance.setCenter(cord);
+                map.instance.setZoom(17);
+                var animatedSvg =
+  '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" ' + 
+  'y="0px" style="margin:-112px 0 0 -32px" width="136px"' + 
+  'height="150px" viewBox="0 0 136 150"><ellipse fill="#000" ' +
+  'cx="32" cy="128" rx="36" ry="4"><animate attributeName="cx" ' + 
+  'from="32" to="32" begin="0s" dur="1.5s" values="96;32;96" ' + 
+  'keySplines=".6 .1 .8 .1; .1 .8 .1 1" keyTimes="0;0.4;1"' + 
+  'calcMode="spline" repeatCount="indefinite"/>' +  
+  '<animate attributeName="rx" from="36" to="36" begin="0s"' +
+  'dur="1.5s" values="36;10;36" keySplines=".6 .0 .8 .0; .0 .8 .0 1"' + 
+  'keyTimes="0;0.4;1" calcMode="spline" repeatCount="indefinite"/>' +
+  '<animate attributeName="opacity" from=".2" to=".2"  begin="0s" ' +
+  ' dur="1.5s" values=".1;.7;.1" keySplines=" .6.0 .8 .0; .0 .8 .0 1" ' +
+  'keyTimes=" 0;0.4;1" calcMode="spline" ' +
+  'repeatCount="indefinite"/></ellipse><ellipse fill="#1b468d" ' +
+  'cx="26" cy="20" rx="16" ry="12"><animate attributeName="cy" ' +
+  'from="20" to="20" begin="0s" dur="1.5s" values="20;112;20" ' +
+  'keySplines=".6 .1 .8 .1; .1 .8 .1 1" keyTimes=" 0;0.4;1" ' +
+  'calcMode="spline" repeatCount="indefinite"/> ' +
+  '<animate attributeName="ry" from="16" to="16" begin="0s" ' + 
+  'dur="1.5s" values="16;12;16" keySplines=".6 .0 .8 .0; .0 .8 .0 1" ' +
+  'keyTimes="0;0.4;1" calcMode="spline" ' +
+  'repeatCount="indefinite"/></ellipse></svg>';
+                var icon = new H.map.DomIcon(animatedSvg);
+                marker = new H.map.DomMarker(cord, {icon: icon});
+                map.instance.addObject(marker);
             }
         }
     });
@@ -418,9 +452,229 @@ const RestaurantView = Vue.component('restaurant-view',
         template:
             '<div class="setup-container">\
                 <div>restaurant view</div>\
+<here-map1 map-div-id="hereMap" ref="hereMap"></here-map1>\
+                <div>{{ Refresh }}</div>\
                 <way-nav-view current="4"></way-nav-view>\
-            </div>'
+            </div>',
+        computed:{
+            Refresh: function(){
+                var center = {
+        lat: 25.04885,
+        lng: 121.521
+    };
+
+    
+    var magicDiff = 0.0017;
+    var magicNumber = magicDiff;
+    var oldMapZoom = 18;
+    var maxMarker = 200;
+    var markerLocations = [];
+    var markerContainer = [];
+    var bubbleContainer = [];
+
+    // Initialize the platform object:
+    var platform = new H.service.Platform({
+        'app_id': '9shB49HQGahETgr6LWDZ',
+        'app_code': '3CPwa96KM9xO-Z90EOBNig'
     });
+
+// Search map
+                var restaurantMap = window._app.$refs.globalMapInstance;
+                var ui = window._app.$refs.globalMapInstance.mapUI;
+                var mapEvents = window._app.$refs.globalMapInstance.mapEvents;
+    // Add event listener:
+    restaurantMap.addEventListener('dragend', function(evt) {
+        // Log 'dragend' and 'mouse' events:
+        console.log(evt.type, evt.currentPointer.type);
+        var nowMapCenter = restaurantMap.getCenter();
+        center.lng = nowMapCenter.lng;
+        center.lat = nowMapCenter.lat;
+    });
+
+    function ClearBubble(address) {
+        for(i = 0; i < bubbleContainer.length; ++i)
+        {
+            bubbleContainer[i].close();
+            bubbleContainer.shift();
+            --i;
+        }
+    }
+
+    // Add event listener:
+    restaurantMap.addEventListener('pointerup', function(evt) {
+        // Log 'dragend' and 'mouse' events:
+        ClearBubble();
+    
+        if (evt.target.type == 3) {
+            console.log(evt.type, evt.target.getPosition());
+            console.log(markerContainer.length);
+            var index;
+            for (i = 0; i < dataPosition.length; ++i) {
+                if (dataPosition[i].lat == evt.target.getPosition().lat && dataPosition[i].lng == evt.target.getPosition().lng) {
+                    console.log('found');
+                    index = i;
+                    break;
+                }
+            }
+
+            console.log(dataAddress[index]);
+            console.log(dataStoreName[index]);
+            console.log(dataStoreTel[index]);
+
+            // Create an info bubble object at a specific geographic location:
+            var bubble = new H.ui.InfoBubble({ lng: dataPosition[index].lng, lat: dataPosition[index].lat }, {
+                content: '店名：<div>' + dataStoreName[index] + '</div>' + '電話：<div>' + dataStoreTel[index] + '</div>' + '住址：<div>' + dataAddress[index] + '</div>'
+            });
+
+            // Add info bubble to the UI:
+            ui.addBubble(bubble);
+            bubbleContainer.push(bubble);
+        }
+        
+    });
+
+
+    restaurantMap.addEventListener('mapviewchangeend', function() {
+        oldMapZoom = restaurantMap.getZoom(); 
+
+        magicNumber = magicDiff + (18 - oldMapZoom) * (18 - oldMapZoom) * magicDiff;
+
+        console.log(oldMapZoom);
+        console.log(magicNumber);
+
+        if(oldMapZoom > 10)
+        {
+            RefreshMarker();
+        }
+    });
+
+    // Define a variable holding SVG mark-up that defines an icon image:
+    var svgMarkup = '<svg width="24" height="24" ' +
+        'xmlns="http://www.w3.org/2000/svg">' +
+        '<rect stroke="white" fill="#1b468d" x="1" y="1" width="22" ' +
+        'height="22" /><text x="12" y="18" font-size="12pt" ' +
+        'font-family="Arial" font-weight="bold" text-anchor="middle" ' +
+        'fill="white">R</text></svg>';
+
+    // Create an icon, an object holding the latitude and longitude, and a marker:
+    var icon = new H.map.Icon(svgMarkup),
+        coords = {lng: 121.521, lat: 25.04885},
+        marker = new H.map.Marker(coords, {icon: icon});
+
+    // restaurantMap.addObject(marker);
+    // restaurantMap.setCenter(coords);
+
+    // Define a callback function to process the geocoding response:
+    var onRestaurantResult = function(result) {
+        var markerLocations = result.Response.View[0].Result,
+            position,
+            marker;
+        // Add a marker for each location found
+        for (i = 0;  i < markerLocations.length; i++) {
+            position = {
+                lat: markerLocations[i].Location.DisplayPosition.Latitude,
+                lng: markerLocations[i].Location.DisplayPosition.Longitude
+            };
+
+            // marker = new H.map.Marker(position);
+            var icon = new H.map.Icon(svgMarkup),
+                marker = new H.map.Marker(position, {icon: icon});
+
+            restaurantMap.addObject(marker);
+            restaurantMap.setCenter(position);
+        }
+    };
+    /*
+    // Create the parameters for the geocoding request:
+    var geocodingParams = {
+        searchText: '臺北市南港區三重路23號'
+    };
+
+    // Get an instance of the geocoding service:
+    var geocoder = platform.getGeocodingService();
+
+    // Call the geocode method with the geocoding parameters,
+    // the callback and an error callback function (called if a
+    // communication error occurs):
+    geocoder.geocode(geocodingParams, onRestaurantResult, function(e) {
+        alert(e);
+    });
+    */
+
+    function SearchRestaurant(address) {
+        // Create the parameters for the geocoding request:
+        var geocodingParams = {
+            searchText: address
+        };
+
+        // Get an instance of the geocoding service:
+        var geocoder = platform.getGeocodingService();
+
+        // Call the geocode method with the geocoding parameters,
+        // the callback and an error callback function (called if a
+        // communication error occurs):
+        geocoder.geocode(geocodingParams, onRestaurantResult, function(e) {
+            alert(e);
+        });
+
+    };
+
+    // alert('@Model[1].Address');
+
+    function RefreshMarker() {
+        markerLocations = [];
+        dataPosition.sort(function(a, b){return 0.5 - Math.random()});
+        for (i = 0; i < dataPosition.length; ++i) {
+
+            //alert(dataPosition[i].lat);
+            //alert(dataPosition[i].lng);
+
+            //alert(center.lat);
+            //alert(center.lng);
+
+            // alert(parseFloat(dataPosition[i].lng) + magicNumber);
+            if (parseFloat(dataPosition[i].lng) + magicNumber > center.lng &&
+                parseFloat(dataPosition[i].lng) - magicNumber < center.lng &&
+                parseFloat(dataPosition[i].lat) + magicNumber > center.lat &&
+                parseFloat(dataPosition[i].lat) - magicNumber < center.lat) {
+
+                markerLocations.push(dataPosition[i]);
+            }
+
+            if(markerLocations.length > maxMarker)
+            {
+                break;
+            }
+        }
+
+        console.log(dataPosition.length);
+        console.log(markerLocations.length);
+
+        for(i = 0; i < markerContainer.length; ++i)
+        {
+            restaurantMap.removeObject(markerContainer[i]);
+            markerContainer.shift();
+            --i;
+        }
+
+        // Add a marker for each location found
+        for (i = 0; i < markerLocations.length; i++) {
+            // marker = new H.map.Marker(position);
+            var icon = new H.map.Icon(svgMarkup),
+                marker = new H.map.Marker(markerLocations[i], { icon: icon });
+
+            markerContainer.push(marker);
+            restaurantMap.addObject(marker);
+            // restaurantMap.setCenter(center);
+        }
+
+    };
+
+    RefreshMarker();
+            }
+        }
+}
+);
 
 
 
@@ -466,8 +720,8 @@ const app = window._app =  new Vue({
     data: {
         tagLine: "Always on the right track",
         latitude: 0,
-        longitude: 0
-
+        longitude: 0,
+        isMapVisible: true
     },
 
     computed: {

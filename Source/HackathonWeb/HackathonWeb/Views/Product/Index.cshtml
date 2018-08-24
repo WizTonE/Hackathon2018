@@ -1,4 +1,5 @@
-﻿@model HackathonWeb.Models.ProductModel
+﻿@using HackathonWeb.Models
+@model IList<HackathonWeb.Models.Restaurant>
 
 @{
     ViewBag.Title = "Product Home";
@@ -16,7 +17,9 @@
     <div id="app-content" class="content-view">
         <router-view></router-view>
     </div>
-    
+
+    <here-map1 v-show="isMapVisible" map-div-id="globalMap" ref="globalMapInstance"></here-map1>
+
     <div id="app-nav" class="nav-view-box">
 
 
@@ -27,7 +30,7 @@
             <span class="nav-button"><router-link to="/airport">Airport</router-link></span>
             <span class="nav-button"><router-link to="/metro">Metro</router-link></span>
             <span class="nav-button"><router-link to="/taxi">Taxi</router-link></span>
-            <span class="nav-button"><router-link to="/hotel">Hotel</router-link></span>
+            <span class="nav-button"><router-link to="/hotel">hotel</router-link></span>
             <span class="nav-button"><router-link to="/feedback">Feedback</router-link></span>
             <span class="nav-button"><router-link to="/restaurant">Restaurant</router-link></span>
         </div>
@@ -39,3 +42,28 @@
 
 
 <script type="text/javascript" src="~/Scripts/product.js"></script>
+    <script>
+        var dataPosition = [];
+        var dataAddress = [];
+        var dataStoreName = [];
+        var dataStoreTel = [];
+    
+        @foreach (var d in Model)
+    {
+        @:dataAddress.push('@d.Address');
+        @:dataStoreName.push('@d.Name');
+        @:dataStoreTel.push('@d.Phone');
+
+        @:var position = {
+        @:lng:0,
+        @:lat:0
+        @:};
+
+        @:position.lng = '@d.Longitude';
+        @:position.lat = '@d.Latitude';
+
+        @:dataPosition.push(position);
+        @:console.log(position.lng, position.lat);
+    }
+    
+    </script>

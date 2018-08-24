@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using HackathonWeb.Models;
+using System.Linq;
 
 namespace HackathonWeb.Controllers
 {
@@ -9,7 +10,7 @@ namespace HackathonWeb.Controllers
         public ActionResult Index()
         {
             ProductModel model = new ProductModel();
-            return View(model);
+            return View(OpenDataStorage.Instance.Restaurants.ToList());
         }
     }
 }
