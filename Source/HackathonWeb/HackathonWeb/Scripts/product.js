@@ -116,6 +116,39 @@ Vue.component('here-map1',
 
 /**
  *
+ * 關鍵地點的小圖
+ *
+ */
+Vue.component('key-thumbnail',
+    {
+        props: ["original", "thumbnail"],
+
+        data: function() {
+            return {
+                isEnlarged: false
+            };
+        },
+
+        methods: {
+            onClickThumb: function() {
+                this.isEnlarged = true;
+            },
+
+            onClickOriginal: function() {
+                this.isEnlarged = false;
+            }
+        },
+
+        template: '<div class="key-thumb-box">\
+            <div class="thumb-view" v-show="!isEnlarged"><div :class="thumbnail" v-on:click="onClickThumb"></div></div>\
+            <div class="enlarged-view" v-show="isEnlarged"><h3>You Should See</h3><div :class="original" v-on:click="onClickOriginal"></div></div>\
+        </div>'
+
+
+    });
+
+/**
+ *
  * 首頁
  *
  */
@@ -217,6 +250,7 @@ const AirportNavView = Vue.component('airport-nav-view',
             '<div class="setup-container">\
                 <div class="map-view">airport nav view</div><span>{{ geo }}</span>\
                 <way-nav-view current="0"></way-nav-view>\
+                <key-thumbnail original="key-pic-airport" thumbnail="thumb-key-pic-airport"></key-thumbnail>\
             </div>'
     });
 
@@ -235,11 +269,12 @@ const MetroNavView = Vue.component('metro-nav-view',
         },
         template:
             '<div class="setup-container">\
-                <div >\
+                <div class="map-view metro-pic-box">\
                   <img src="../Scripts/assets/mrt-Zhongshan.png" width="100%" height="100%"> \
                   1.出口電梯：<br>出口4（南京西路北側之淡水線線形公園內）<br>出口5（南京西路與赤峰街交叉東北隅）<br>出口6（南京西路與赤峰街交叉東南隅）<br>2.月臺電梯：<br>淡水信義線：大廳層中央<br>松山新店線：大廳層東側<br>\
                 </div>\
                 <way-nav-view current="1"></way-nav-view>\
+                <key-thumbnail original="key-pic-metro" thumbnail="thumb-key-pic-metro"></key-thumbnail>\
             </div>'
     });
 
@@ -259,8 +294,10 @@ const UberNavView = Vue.component('uber-nav-view',
         template:
 
             '<div class="setup-container">\
-                <div></div>\
-            <way-nav-view current="2"></way-nav-view>\
+                <div class="map-view">\
+                    <div><div><iframe width="100%" height="1500" src="https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]=25.077883&pickup[longitude]=121.5727394&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home" frameborder="0" allowfullscreen></iframe></div></div>\
+                </div>\
+                <way-nav-view current="2"></way-nav-view>\
             </div>'
     });
 
@@ -280,7 +317,7 @@ const DestinationView = Vue.component('destination-view',
         },
         template:
             '<div class="setup-container">\
-                <div>destination view</div>\
+                <div class="map-view">destination view</div>\
                 <way-nav-view current="3"></way-nav-view>\
             </div>'
     });
@@ -300,7 +337,7 @@ const FeedbackView = Vue.component('feedback-view',
             }
         },
         template:
-            '<div class="setup-container"><div>feedback view</div></div>'
+            '<div class="setup-container"><div class="map-view">feedback view</div></div>'
     });
 
 /**
