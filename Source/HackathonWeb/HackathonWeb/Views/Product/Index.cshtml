@@ -42,7 +42,7 @@
 </div>
 
 
-<script>var RestarauntInfo = @ViewData["Restaraunts"];
-    var TaxiInfo = @ViewData["TaxiInfo"];
+<script>var RestarauntInfo = JSON.parse('@ViewData["Restaraunts"]');
+    var TaxiInfo = JSON.parse('@ViewData["TaxiInfo"]');
 </script>
 <script type="text/javascript" src="~/Scripts/product.js"></script>
