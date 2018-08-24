@@ -35,6 +35,23 @@
 
 	 */
 
+	var center = {
+	    lat: 25.04885,
+	    lng: 121.521
+	};
+
+	
+	var magicDiff = 0.0017;
+	var magicNumber = magicDiff;
+	var oldMapZoom = 18;
+	var maxMarker = 200;
+	var dataAddress = [];
+	var dataStoreName = [];
+	var dataStoreTel = [];
+	var dataPosition = [];
+	var markerLocations = [];
+	var markerContainer = [];
+
     // Initialize the platform object:
     var platform = new H.service.Platform({
         'app_id': '9shB49HQGahETgr6LWDZ',
@@ -49,10 +66,67 @@
         document.getElementById('mapNavigator'),
         maptypes.normal.map,
         {
-            zoom: 18,
-            center: { lng: 121.521, lat: 25.04885 }
+            zoom: oldMapZoom,
+            center: { lng: center.lng, lat: center.lat }
         });
-    
+
+	var mapEvents = new H.mapevents.MapEvents(restaurantMap);
+	var behavior = new H.mapevents.Behavior(mapEvents);
+	// Create the default UI:
+	var ui = H.ui.UI.createDefault(restaurantMap, maptypes);
+
+	// Add event listener:
+	restaurantMap.addEventListener('dragend', function(evt) {
+	    // Log 'dragend' and 'mouse' events:
+	    console.log(evt.type, evt.currentPointer.type);
+	    var nowMapCenter = restaurantMap.getCenter();
+	    center.lng = nowMapCenter.lng;
+	    center.lat = nowMapCenter.lat;
+	});
+
+	// Add event listener:
+	restaurantMap.addEventListener('pointerup', function(evt) {
+	    // Log 'dragend' and 'mouse' events:
+	    
+		if (evt.target.type == 3) {
+		    console.log(evt.type, evt.target.getPosition());
+		    console.log(markerContainer.length);
+		    var index;
+		    for (i = 0; i < dataPosition.length; ++i) {
+		        if (dataPosition[i].lat == evt.target.getPosition().lat && dataPosition[i].lng == evt.target.getPosition().lng) {
+		            console.log('found');
+		            index = i;
+		            break;
+		        }
+		    }
+
+		    console.log(dataAddress[index]);
+		    console.log(dataStoreName[index]);
+		    console.log(dataStoreTel[index]);
+
+		    // Create an info bubble object at a specific geographic location:
+		    var bubble = new H.ui.InfoBubble({ lng: dataPosition[index].lng, lat: dataPosition[index].lat }, {
+		        content: '店名：<div>' + dataStoreName[index] + '</div>' + '電話：<div>' + dataStoreTel[index] + '</div>' + '住址：<div>' + dataAddress[index] + '</div>'
+		    });
+
+            // Add info bubble to the UI:
+		    ui.addBubble(bubble);
+		}
+	});
+
+	restaurantMap.addEventListener('mapviewchangeend', function() {
+	    oldMapZoom = restaurantMap.getZoom(); 
+
+	    magicNumber = magicDiff + (18 - oldMapZoom) * (18 - oldMapZoom) * magicDiff;
+
+	    console.log(oldMapZoom);
+	    console.log(magicNumber);
+
+	    if(oldMapZoom > 10)
+	    {
+	        RefreshMarker();
+	    }
+	});
 
     // Define a variable holding SVG mark-up that defines an icon image:
     var svgMarkup = '<svg width="24" height="24" ' +
@@ -72,14 +146,14 @@
 
     // Define a callback function to process the geocoding response:
     var onRestaurantResult = function(result) {
-        var locations = result.Response.View[0].Result,
+        var markerLocations = result.Response.View[0].Result,
             position,
             marker;
         // Add a marker for each location found
-        for (i = 0;  i < locations.length; i++) {
+        for (i = 0;  i < markerLocations.length; i++) {
             position = {
-                lat: locations[i].Location.DisplayPosition.Latitude,
-                lng: locations[i].Location.DisplayPosition.Longitude
+                lat: markerLocations[i].Location.DisplayPosition.Latitude,
+                lng: markerLocations[i].Location.DisplayPosition.Longitude
             };
 
             // marker = new H.map.Marker(position);
@@ -126,12 +200,12 @@
     };
 
     // alert('@Model[1].Address');
-    var dataAddress = [];
-    var dataPosition = [];
 
     @foreach (var d in Model)
     {
         @:dataAddress.push('@d.Address');
+		@:dataStoreName.push('@d.Name');
+        @:dataStoreTel.push('@d.Phone');
 
 		@:var position = {
         @:lng:0,
@@ -142,45 +216,53 @@
         @:position.lat = '@d.Latitude';
 
         @:dataPosition.push(position);
+		@:console.log(position.lng, position.lat);
     }
+	
+    function RefreshMarker() {
+        for (i = 0; i < dataPosition.length; ++i) {
+            //alert(dataPosition[i].lat);
+            //alert(dataPosition[i].lng);
 
-    var center = {
-        lat: 25.04885,
-        lng: 121.521
-    };
+            //alert(center.lat);
+            //alert(center.lng);
 
-    var diff = 0.001;
-    var locations = [];
-    for (i = 0; i < dataPosition.length; ++i) {
-        //alert(dataPosition[i].lat);
-        //alert(dataPosition[i].lng);
+            // alert(parseFloat(dataPosition[i].lng) + magicNumber);
+            if (parseFloat(dataPosition[i].lng) + magicNumber > center.lng &&
+                parseFloat(dataPosition[i].lng) - magicNumber < center.lng &&
+                parseFloat(dataPosition[i].lat) + magicNumber > center.lat &&
+                parseFloat(dataPosition[i].lat) - magicNumber < center.lat) {
 
-        //alert(center.lat);
-        //alert(center.lng);
+				if(markerLocations.length < maxMarker)
+				{
+				    markerLocations.push(dataPosition[i]);
+			    }
+            }
 
-        // alert(parseFloat(dataPosition[i].lng) + diff);
-        if (parseFloat(dataPosition[i].lng) + diff > center.lng &&
-            parseFloat(dataPosition[i].lng) - diff < center.lng &&
-            parseFloat(dataPosition[i].lat) + diff > center.lat &&
-            parseFloat(dataPosition[i].lat) - diff < center.lat) {
-            locations.push(dataPosition[i]);
         }
 
-    }
+        console.log(dataPosition.length);
+        console.log(markerLocations.length);
 
-    // alert(locations.length);
+        for(i = 0; i < markerContainer.length; ++i)
+        {
+            restaurantMap.removeObject(markerContainer[i]);
+            markerContainer.shift();
+            --i;
+        }
 
-    // Add a marker for each location found
-    for (i = 0;  i < locations.length; i++) {
+        // Add a marker for each location found
+        for (i = 0; i < markerLocations.length; i++) {
+            // marker = new H.map.Marker(position);
+            var icon = new H.map.Icon(svgMarkup),
+                marker = new H.map.Marker(markerLocations[i], { icon: icon });
 
-        // marker = new H.map.Marker(position);
-        var icon = new H.map.Icon(svgMarkup),
-            marker = new H.map.Marker(locations[i], {icon: icon});
+            markerContainer.push(marker);
+            restaurantMap.addObject(marker);
+            // restaurantMap.setCenter(center);
+        }
 
-        restaurantMap.addObject(marker);
-        restaurantMap.setCenter(center);
-    }
-	var mapEvents = new H.mapevents.MapEvents(restaurantMap);
-	var behavior = new H.mapevents.Behavior(mapEvents);
-	var ui = H.ui.UI.createDefault(restaurantMap, defaultLayers);
+    };
+
+	RefreshMarker();
 </script>

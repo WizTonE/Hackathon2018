@@ -10,6 +10,78 @@
 
 /**
  *
+ * 地圖元件下方的交通工具路徑顯示
+ *
+ */
+Vue.component('way-nav-view', {
+
+    props: ["current"],
+
+    data: function () {
+        return {
+
+            iconNames: ["airport", "metro", "taxi", "hotel"],
+            positionNames: ["Taiwan Taoyuan International Airport", "Taipei Metro System", "Accessible Taxi Driver", "Your Hotel"],
+            positionAddress: ["No. 9, Hangzhan S. Rd., Dayuan Dist., Taoyuan City", "On The Right Track", "By Your Side", "Your Hotel Address"]
+
+        } 
+    },
+
+    computed: {
+        currentIconName: function () {
+            let index = parseInt(this.current);
+            return this.iconNames[index];
+            
+        },
+
+        currentPositionName: function () {
+            let index = parseInt(this.current);
+            return this.positionNames[index];
+        },
+
+        currentPositionAddress: function() {
+            return this.positionAddress[parseInt(this.current)];
+        }
+
+    },
+
+    methods: {
+
+        onClickIcon: function (index) {
+            const viewNames = ["airport", "metro", "taxi", "hotel"];
+            this.$router.push(viewNames[index]);
+        }
+
+    },
+
+    template: '<div class="way-nav-box">\
+    <div class="current-position">\
+        <div :class="currentIconName"></div>\
+        <div>\
+            <div class="position-name">{{ currentPositionName }}</div>\
+            <div class="position-address">{{ currentPositionAddress }}</div>\
+        </div>\
+    </div>\
+    <div class="position-selection">\
+        <div class="item airport" :class="{active : current == 0}" v-on:click="onClickIcon(0)"><div class="pos0"></div><div class="icon-airport"></div></div>\
+        <div class="item metro" :class="{active : current == 1}" v-on:click="onClickIcon(1)"><div class="pos1"></div><div class="icon-metro"></div></div>\
+        <div class="item taxi" :class="{active : current == 2}" v-on:click="onClickIcon(2)"><div class="pos2"></div><div class="icon-taxi"></div></div>\
+        <div class="item hotel" :class="{active : current == 3}" v-on:click="onClickIcon(3)"><div class="pos3"></div><div class="icon-hotel"></div></div>\
+    </div>\
+    <div class="location-details">\
+        <div>Location Detail</div>\
+        <div>\
+            <div class="icon-elevator"/>\
+        </div>\
+    </div>\
+    </div>\
+</div>'
+
+
+});
+
+/**
+ *
  * 首頁
  *
  */
@@ -85,8 +157,22 @@ const AirportNavView = Vue.component('airport-nav-view',
             return {
             }
         },
+
+
+        computed: {
+            geo: function() {
+                return window._app ? window._app.$data.latitude : "";
+
+            }
+
+        },
+
+
         template:
-            '<div class="setup-container"><div>airport nav view</div></div>'
+            '<div class="setup-container">\
+                <div class="map-view">airport nav view</div><span>{{ geo }}</span>\
+                <way-nav-view current="0"></way-nav-view>\
+            </div>'
     });
 
 /**
@@ -104,10 +190,12 @@ const MetroNavView = Vue.component('metro-nav-view',
         },
         template:
             '<div class="setup-container">\
+
                 <div >\
                   <img src="../Scripts/assets/mrt-Zhongshan.png" width="100%" height="100%"> \
                   1.出口電梯：<br>出口4（南京西路北側之淡水線線形公園內）<br>出口5（南京西路與赤峰街交叉東北隅）<br>出口6（南京西路與赤峰街交叉東南隅）<br>2.月臺電梯：<br>淡水信義線：大廳層中央<br>松山新店線：大廳層東側<br>\
                 </div>\
+
             </div>'
     });
 
@@ -125,14 +213,19 @@ const UberNavView = Vue.component('uber-nav-view',
             }
         },
         template:
-            '<div class="setup-container"><div><iframe width="100%" height="1500" src="https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]=25.077883&pickup[longitude]=121.5727394&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home" frameborder="0" allowfullscreen></iframe></div></div>'
+
+            '<div class="setup-container">\
+                <div>uber nav view</div>\
+                <way-nav-view current="2"></way-nav-view>\
+            </div>'
+
     });
 
 
 /**
  *
  *
- * Uber導航
+ * Hotel
  *
  *
  */
@@ -143,14 +236,17 @@ const DestinationView = Vue.component('destination-view',
             }
         },
         template:
-            '<div class="setup-container"><div>destination view</div></div>'
+            '<div class="setup-container">\
+                <div>destination view</div>\
+                <way-nav-view current="3"></way-nav-view>\
+            </div>'
     });
 
 
 /**
  *
  *
- * Uber導航
+ * Feedback
  *
  *
  */
@@ -197,8 +293,8 @@ const productDefaultRoutes = [
     { path: '/setup', component: SetupView },
     { path: '/airport', component: AirportNavView },
     { path: '/metro', component: MetroNavView },
-    { path: '/uber', component: UberNavView },
-    { path: '/destination', component: DestinationView },
+    { path: '/taxi', component: UberNavView },
+    { path: '/hotel', component: DestinationView },
     { path: '/feedback', component: FeedbackView },
     { path: '/restaurant', component: RestaurantView },
 ];
@@ -216,12 +312,14 @@ const router = new VueRouter({
  * ===============================================
  *
  */
-const app = new Vue({
+const app = window._app =  new Vue({
     el: "#app",
     router,
 
     data: {
-        tagLine: "Always on the right track"
+        tagLine: "Always on the right track",
+        latitude: 0,
+        longitude: 0
 
     },
 
@@ -229,6 +327,22 @@ const app = new Vue({
         location: function() {
             return "Taiwan";
         }
+    },
+
+    methods: {
+        getGeoLocation: function () {
+            var that = this;
+            navigator.geolocation.getCurrentPosition(function (position) {
+                that.longitude = position.coords.longitude;
+                that.latitude = position.coords.latitude;
+            });
+        }
+    },
+
+    mounted: function() {
+        this.getGeoLocation();
     }
+
+
 });
 
