@@ -111,7 +111,7 @@ Vue.component('here-map1',
             this.$data.map = window.setupHereMap(this.mapDivId);
         },
 
-        template: '<div :id="mapDivId" class="here-map-box"></div>',
+        template: '<div :id="mapDivId" class="here-map-box global-map-box"></div>',
 
         methods: {
             createPoints: function(...p) {
@@ -124,6 +124,40 @@ Vue.component('here-map1',
                     marker = new H.map.Marker(position);
                     this.$data.map.instance.addObject(marker);
                 }
+            },
+            centerMaps: function(){
+                window._app.getGeoLocation();
+                var latitude = window._app.$data.latitude;
+                var longitude = window._app.$data.longitude;
+                var cord = {lat: latitude, lng: longitude}
+                map.instance.setCenter(cord);
+                map.instance.setZoom(17);
+                var animatedSvg =
+  '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" ' + 
+  'y="0px" style="margin:-112px 0 0 -32px" width="136px"' + 
+  'height="150px" viewBox="0 0 136 150"><ellipse fill="#000" ' +
+  'cx="32" cy="128" rx="36" ry="4"><animate attributeName="cx" ' + 
+  'from="32" to="32" begin="0s" dur="1.5s" values="96;32;96" ' + 
+  'keySplines=".6 .1 .8 .1; .1 .8 .1 1" keyTimes="0;0.4;1"' + 
+  'calcMode="spline" repeatCount="indefinite"/>' +  
+  '<animate attributeName="rx" from="36" to="36" begin="0s"' +
+  'dur="1.5s" values="36;10;36" keySplines=".6 .0 .8 .0; .0 .8 .0 1"' + 
+  'keyTimes="0;0.4;1" calcMode="spline" repeatCount="indefinite"/>' +
+  '<animate attributeName="opacity" from=".2" to=".2"  begin="0s" ' +
+  ' dur="1.5s" values=".1;.7;.1" keySplines=" .6.0 .8 .0; .0 .8 .0 1" ' +
+  'keyTimes=" 0;0.4;1" calcMode="spline" ' +
+  'repeatCount="indefinite"/></ellipse><ellipse fill="#1b468d" ' +
+  'cx="26" cy="20" rx="16" ry="12"><animate attributeName="cy" ' +
+  'from="20" to="20" begin="0s" dur="1.5s" values="20;112;20" ' +
+  'keySplines=".6 .1 .8 .1; .1 .8 .1 1" keyTimes=" 0;0.4;1" ' +
+  'calcMode="spline" repeatCount="indefinite"/> ' +
+  '<animate attributeName="ry" from="16" to="16" begin="0s" ' + 
+  'dur="1.5s" values="16;12;16" keySplines=".6 .0 .8 .0; .0 .8 .0 1" ' +
+  'keyTimes="0;0.4;1" calcMode="spline" ' +
+  'repeatCount="indefinite"/></ellipse></svg>';
+                var icon = new H.map.DomIcon(animatedSvg);
+                marker = new H.map.DomMarker(cord, {icon: icon});
+                map.instance.addObject(marker);
             }
         }
     });
@@ -234,7 +268,6 @@ const SetupView = Vue.component('setup-view',
         template:
             '<div class="setup-container">\
                 <div><input v-model="address" /><button v-on:click="onClick">Locate!</button>{{ message }}</div>\
-                <here-map1 map-div-id="hereMap" ref="hereMap"></here-map1>\
             </div>',
         methods: {
             onClick: function() {
@@ -361,14 +394,17 @@ const UberNavView = Vue.component('uber-nav-view',
                 var latitude = window._app.$data.latitude;
                 var longitude = window._app.$data.longitude;
                 window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]="+latitude+"&pickup[longitude]="+longitude+"&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
+            },
+            onClickMap : function(){
+                window._app.$refs.globalMapInstance.centerMaps();
             }
         },
 
         template:
 
             '<div class="setup-container">\
-                <here-map1 map-div-id="setupViewMap"></here-map1>\
                 <span class="icon-uber" v-on:click="onClickIcon"></span>\
+                <span class="icon-centerMap" v-on:click="onClickMap">Center </span>\
                 <way-nav-view current="2"></way-nav-view>\
             </div>'
     });
@@ -475,7 +511,8 @@ const app = window._app =  new Vue({
     data: {
         tagLine: "Always on the right track",
         latitude: 0,
-        longitude: 0
+        longitude: 0,
+        isMapVisible: true
 
     },
 
