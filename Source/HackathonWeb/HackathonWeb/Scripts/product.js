@@ -102,18 +102,30 @@ Vue.component('here-map1',
 
         data: function() {
             return {
-                map: {}
+                map: {},
+                isInited: false
             }
         },
 
         mounted: function () {
             // call map init on layout 
-            this.$data.map = window.setupHereMap(this.mapDivId);
+           //this.$data.map = window.setupHereMap(this.mapDivId);
+            this.init();
         },
 
         template: '<div :id="mapDivId" class="here-map-box global-map-box"></div>',
 
         methods: {
+            init: function() {
+                if (this.isInited || !window._app || !window._app.$data.isMapVisible) {
+                    return;
+                }
+                console.log(">> HERE map inited");
+                this.$data.map = window.setupHereMap(this.mapDivId);
+                this.isInited = true;
+            },
+
+
             createPoints: function(...p) {
                 map.instance.removeObjects(map.instance.getObjects());
                 for(var i=0; i<p.length; i++) {
@@ -218,7 +230,10 @@ const HomeView = Vue.component('home-view', {
     template: '<div class="home-container">\
                 <div class="button-box"><div class="go-button" v-on:click="onClickGo">GO</div></div>\
                </div>'
-
+    ,
+    created: function () {
+        if (window._app) window._app.displayGlobalMap(false);
+    }
 
 });
 
@@ -246,6 +261,10 @@ const LanguageView = Vue.component('language-view',
 
         template:
             '<div class="language-container"><div class="language-item" v-for="option in options" v-on:click=onClickLang> {{ option }}</div></div>'
+        ,
+        created: function () {
+            if (window._app) window._app.displayGlobalMap(false);
+        }
     });
 
 /**
@@ -313,10 +332,13 @@ const SetupView = Vue.component('setup-view',
                 message = m;
             }
 
-            
+        },
 
-            
+        created: function() {
+            if (window._app) window._app.displayGlobalMap(true);
         }
+
+
     });
 
 /**
@@ -348,7 +370,11 @@ const AirportNavView = Vue.component('airport-nav-view',
                 <div class="map-view">airport nav view</div><span>{{ geo }}</span>\
                 <way-nav-view current="0"></way-nav-view>\
                 <key-thumbnail original="key-pic-airport" thumbnail="thumb-key-pic-airport"></key-thumbnail>\
-            </div>'
+            </div>',
+
+        created: function () {
+            if (window._app) window._app.displayGlobalMap(false);
+        }
     });
 
 /**
@@ -372,7 +398,12 @@ const MetroNavView = Vue.component('metro-nav-view',
                 </div>\
                 <way-nav-view current="1"></way-nav-view>\
                 <key-thumbnail original="key-pic-metro" thumbnail="thumb-key-pic-metro"></key-thumbnail>\
-            </div>'
+            </div>',
+
+
+        created: function () {
+            if (window._app) window._app.displayGlobalMap(false);
+        }
     });
 
 /**
@@ -517,7 +548,7 @@ const app = window._app =  new Vue({
         tagLine: "Always on the right track",
         currentPosition: {longitude:0,latitude:0},
         destPosition: {longitude:0,latitude:0},
-        isMapVisible: true,
+        isMapVisible: false,
         geoLocIntervalId: -1
 
     },
@@ -539,7 +570,31 @@ const app = window._app =  new Vue({
         raiseEvent: function() {
             var event = new CustomEvent('location', {detail: {lat: this.$data.currentPosition.latitude, lng: this.$data.currentPosition.longitude}});
             document.dispatchEvent(event);
+        },
+
+        initGlobalMapInstance: function() {
+            if (this.$refs.globalMapInstance.isInited) {
+                this.isMapVisible = true;
+                return;
+            }
+            console.log(">>>initGlobalMapInstance");
+            this.isMapVisible = true;
+            var that = this;
+            setTimeout(function() {
+                    that.$refs.globalMapInstance.init();
+                },
+            1);
+        },
+
+        displayGlobalMap: function (show) {
+            console.log(">>displayGlobalMap ? ", show);
+            if (show) {
+                this.initGlobalMapInstance();
+            } else {
+                this.isMapVisible = false;
+            }
         }
+
     },
 
     mounted: function() {
@@ -547,7 +602,7 @@ const app = window._app =  new Vue({
         var that = this;
         this.geoLocIntervalId = setInterval( function(){ 
             that.getGeoLocation();
-        } , 3000 )
+        } , 3000 );
 
     },
 });
