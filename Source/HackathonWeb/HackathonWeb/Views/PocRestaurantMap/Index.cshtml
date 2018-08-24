@@ -225,8 +225,9 @@
     }
 	
     function RefreshMarker() {
+        markerLocations = [];
         dataPosition.sort(function(a, b){return 0.5 - Math.random()});
-        for (i = 0; i < maxMarker; ++i) {
+        for (i = 0; i < dataPosition.length; ++i) {
 
             //alert(dataPosition[i].lat);
             //alert(dataPosition[i].lng);
@@ -243,6 +244,10 @@
 				markerLocations.push(dataPosition[i]);
             }
 
+            if(markerLocations.length > maxMarker)
+            {
+                break;
+            }
         }
 
         console.log(dataPosition.length);
