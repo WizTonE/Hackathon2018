@@ -13,12 +13,13 @@
             type="text/javascript" charset="utf-8"></script>
     <script src="http://js.api.here.com/v3/3.0/mapsjs-mapevents.js"
             type="text/javascript" charset="utf-8"></script>
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-places.js"
+            type="text/javascript" charset="utf-8"></script>
     <script src="http://js.api.here.com/v3/3.0/mapsjs-ui.js"
             type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" type="text/css"
           href="http://js.api.here.com/v3/3.0/mapsjs-ui.css" />
-    <script type="text/javascript" charset="utf-8">
-        var map = {
+    <script type="text/javascript" charset="utf-8">var map = {
             configuration: {
                 'app_id': '9shB49HQGahETgr6LWDZ',
                 'app_code': '3CPwa96KM9xO-Z90EOBNig'
@@ -27,9 +28,9 @@
             maptypes: {},
             instance: {},
             ui: {}
-        };
+};
 
-        function setupHereMap(elementId) {
+function setupHereMap(elementId) {
             map.platform = new H.service.Platform(map.configuration);
             map.maptypes = map.platform.createDefaultLayers();
             map.instance = new H.Map(
@@ -39,8 +40,7 @@
             var behavior = new H.mapevents.Behavior(mapEvents);
             map.ui = H.ui.UI.createDefault(map.instance, map.maptypes);
             return map;
-        }
-    </script>
+}</script>
 </head>
     <body>
         @RenderBody()

@@ -281,83 +281,133 @@ const SetupView = Vue.component('setup-view',
     {
         data: function() {
             return {
-                searchText: '',
+                saddress: '',
+                splace: '',
                 message: '',
                 hotel: '',
                 address: '',
-                mapObj: {}
+                geo: null,
+                mapGroup: null
             }
         },
         template:
             `<div class="setup-container">
                 <div>
-                    <input v-model="searchText" v-on:keydown="keyDown" />
+                    <div id="address-search">Address: <input v-model="saddress" v-on:keydown="keyDownAddress" /></div>
+                    <div id="place-search">Place: <input v-model="splace" v-on:keydown="keyDownPlace" /></div>
+                    <div v-if="isShowNext"><button>Next</button></div>
                 </div>
                 <div class="map-view"></div>
                 <div class="info-view">
                     <div id="message"> {{ message }}</div>
                     <div id="hotel">Hotel: {{ hotel }}</div>
                     <div id="address">Address: {{ address }}</div>
+
                 </div>
             </div>`,
         methods: {
-            search: function() {
-                var geoParameters = { searchText: this.searchText };
-                var model = this;
-                var onResult = function(result) {
-                    if(result.Response == undefined || result.Response.View.length == 0)
-                        return;
-                    var locations = result.Response.View[0].Result,
-                        position,
-                        marker;
+            onSearchResult: function(result) {
+                this.removeExists();
+                var position, model = this;
+                this.mapGroup = new H.map.Group();
+                this.mapGroup.addEventListener('tap', function(evt) {
+                    model.setDest(evt.target.getData());
+                });
+                this.hereMap.addObject(this.mapGroup);
 
-                    if(locations.length == 0) {
-                        model.message = "No result found.";
+                var markers = [];
+                if(result.Response != undefined && result.Response.View.length != 0) {
+                    //address
+                    var locations = result.Response.View[0].Result;
+                    markers = new Array(locations.length);
+                    for(var i=0; i<locations.length; i++) {
+                        position = {
+                           lat: locations[i].Location.DisplayPosition.Latitude,
+                           lng: locations[i].Location.DisplayPosition.Longitude
+                        };
+                        markers[i] = new H.map.Marker(position);
+                        markers[i].setData({title: '', address: locations[i].Location.Address.Label, geo: position })
                     }
-                    else if(locations.length > 1) {
-                        model.message = "too much results found."
-                        model.removeExists();
-                        group = new H.map.Group();
-                        model.hereMap.addObject(group);
-                        group.addEventListener('tap', function(evt) {
-                            model.setHotel(evt.target.getData());
-                        });
-                        for(var i=0; i<locations.length; i++) {
-                            position = {
-                                lat: locations[i].Location.DisplayPosition.Latitude,
-                                lng: locations[i].Location.DisplayPosition.Longitude
-                            };
-                            var marker = new H.map.Marker(position);
-                            marker.setData(locations[i]);
-                            group.addObject(marker);
-                        }
-                        model.mapObj = group;
+                       
+                }
+                else if(result.results != undefined && result.results.items.length != 0) {
+                    //place
+                    var items = result.results.items;
+                    markers = new Array(items.length);
+                    for(var i=0; i<items.length; i++) {
+                        position = {
+                           lat: items[i].position[0],
+                           lng: items[i].position[1]
+                        };
+                        markers[i] = new H.map.Marker(position);
+                        markers[i].setData({title: items[i].title, address: items[i].vicinity, geo: position })
                     }
+                }
+
+
+
+                if(markers.length == 0) 
+                    this.message = "No result found.";
+                else {
+                    for(var i=0; i<markers.length; i++)
+                        this.mapGroup.addObject(markers[i]);
+                    this.hereMap.setViewBounds(this.mapGroup.getBounds());
+                
+                    if(markers.length > 1)
+                        this.message = "Too many results, please select one."
                     else {
-                        model.setHotel(locations[0]);
+                        this.message = "";
+                        this.setDest(markers[0].getData());
                     }
-                };
+                }
+
+
+                    
+
+            },
+
+            searchAddress: function() {
+                this.splace = '';
+                var geoParameters = { searchText: this.saddress };
                 var geocoder = map.platform.getGeocodingService();
-                geocoder.geocode(geoParameters, onResult, function(e) {
+                geocoder.geocode(geoParameters, this.onSearchResult, function(e) {
                     model.message = e.message;
                 });
             },
-            keyDown: function(ev) {
+            keyDownAddress: function(ev) {
                 if(ev.which == 13 || ev.keyCode == 13)
-                    this.search();
+                    this.searchAddress();
             },
-            setHotel: function(m) {
-                this.removeExists();
-                var location = {
-                    lat: m.Location.DisplayPosition.Latitude,
-                    lng: m.Location.DisplayPosition.Longitude
-                };
-                var marker = new H.map.DomMarker(location);
-                this.hereMap.addObjects(marker);
+            searchPlace: function() {
+                this.saddress = '';
+                var placeParameters = { q: this.splace, at:window._app.$data.currentPosition.latitude+","+window._app.$data.currentPosition.longitude  };
+                var explorer = new H.places.Search(this.map.platform.getPlacesService());
+                explorer.request(placeParameters, {}, this.onSearchResult, function(e) {
+                    this.message = e.message;
+                });
+            },
+            keyDownPlace: function(ev) {
+                if(ev.which == 13 || ev.keyCode == 13)
+                    this.searchPlace();
+            },
+
+            setDest: function(m) {
+                this.hotel = m.title;
+                this.address = m.address;
+                this.geo = m.geo;
             },
             removeExists: function() {
-                if(this.mapObj != null)
-                   this.hereMap.removeObject(this.mapObj);
+                if(this.mapGroup != null || this.mapGroup != undefined) {
+                    var objs = this.mapGroup.getObjects();
+                    if(objs != undefined) {
+                        for(var i=0; i<objs.length; i++)
+                            this.mapGroup.removeObject(objs[i]);
+                    }
+                }
+            },
+            nextClick: function() {
+                window._app.$data.destPosition = {longitude:this.geo.lat,latitude:this.geo.lng};
+                this.$router.push("airport");
             }
         },
         computed: {
@@ -369,6 +419,9 @@ const SetupView = Vue.component('setup-view',
             },
             hereMap: function() {
                 return this.map.instance;
+            },
+            isShowNext: function() {
+                return this.address.length != 0;
             }
         }
     });
