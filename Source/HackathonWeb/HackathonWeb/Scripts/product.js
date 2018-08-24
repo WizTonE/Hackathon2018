@@ -39,14 +39,14 @@ Vue.component('way-nav-view', {
                 "Your Hotel Address",
                 "Your Restaurant Address"]
 
-        } 
+        }
     },
 
     computed: {
         currentIconName: function () {
             let index = parseInt(this.current);
             return this.iconNames[index];
-            
+
         },
 
         currentPositionName: function () {
@@ -54,7 +54,7 @@ Vue.component('way-nav-view', {
             return this.positionNames[index];
         },
 
-        currentPositionAddress: function() {
+        currentPositionAddress: function () {
             return this.positionAddress[parseInt(this.current)];
         }
 
@@ -98,11 +98,26 @@ Vue.component('way-nav-view', {
 
 Vue.component('here-map1',
     {
-        props:['mapDivId'],
+        props: ['mapDivId'],
 
-        data: function() {
+        data: function () {
             return {
-                map: {}
+                map: {},
+                magicDiff: 0.0017,
+                magicNumber: 0,
+                oldMapZoom: 18,
+                maxMarker: 200,
+                dataStore:[],
+                markerLocations: [],
+                markerContainer: [],
+                bubbleContainer: [],
+                centerPosition: [],
+                svgMarkup: '<svg width="24" height="24" ' +
+                    'xmlns="http://www.w3.org/2000/svg">' +
+                    '<rect stroke="white" fill="#1b468d" x="1" y="1" width="22" ' +
+                    'height="22" /><text x="12" y="18" font-size="12pt" ' +
+                    'font-family="Arial" font-weight="bold" text-anchor="middle" ' +
+                    'fill="white">R</text></svg>'
             }
         },
 
@@ -114,9 +129,9 @@ Vue.component('here-map1',
         template: '<div :id="mapDivId" class="here-map-box global-map-box"></div>',
 
         methods: {
-            createPoints: function(...p) {
+            createPoints: function (...p) {
                 map.instance.removeObjects(map.instance.getObjects());
-                for(var i=0; i<p.length; i++) {
+                for (var i = 0; i < p.length; i++) {
                     position = {
                         lat: p[i].location.lat,
                         lng: p[i].location.lng
@@ -125,39 +140,164 @@ Vue.component('here-map1',
                     this.$data.map.instance.addObject(marker);
                 }
             },
-            centerMaps: function(){
+            centerMaps: function () {
                 window._app.getGeoLocation();
                 var latitude = window._app.$data.currentPosition.latitude;
                 var longitude = window._app.$data.currentPosition.longitude;
-                var cord = {lat: latitude, lng: longitude}
+                var cord = { lat: latitude, lng: longitude }
+                console.log(cord);
                 map.instance.setCenter(cord);
                 map.instance.setZoom(17);
                 var animatedSvg =
-  '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" ' + 
-  'y="0px" style="margin:-112px 0 0 -32px" width="136px"' + 
-  'height="150px" viewBox="0 0 136 150"><ellipse fill="#000" ' +
-  'cx="32" cy="128" rx="36" ry="4"><animate attributeName="cx" ' + 
-  'from="32" to="32" begin="0s" dur="1.5s" values="96;32;96" ' + 
-  'keySplines=".6 .1 .8 .1; .1 .8 .1 1" keyTimes="0;0.4;1"' + 
-  'calcMode="spline" repeatCount="indefinite"/>' +  
-  '<animate attributeName="rx" from="36" to="36" begin="0s"' +
-  'dur="1.5s" values="36;10;36" keySplines=".6 .0 .8 .0; .0 .8 .0 1"' + 
-  'keyTimes="0;0.4;1" calcMode="spline" repeatCount="indefinite"/>' +
-  '<animate attributeName="opacity" from=".2" to=".2"  begin="0s" ' +
-  ' dur="1.5s" values=".1;.7;.1" keySplines=" .6.0 .8 .0; .0 .8 .0 1" ' +
-  'keyTimes=" 0;0.4;1" calcMode="spline" ' +
-  'repeatCount="indefinite"/></ellipse><ellipse fill="#1b468d" ' +
-  'cx="26" cy="20" rx="16" ry="12"><animate attributeName="cy" ' +
-  'from="20" to="20" begin="0s" dur="1.5s" values="20;112;20" ' +
-  'keySplines=".6 .1 .8 .1; .1 .8 .1 1" keyTimes=" 0;0.4;1" ' +
-  'calcMode="spline" repeatCount="indefinite"/> ' +
-  '<animate attributeName="ry" from="16" to="16" begin="0s" ' + 
-  'dur="1.5s" values="16;12;16" keySplines=".6 .0 .8 .0; .0 .8 .0 1" ' +
-  'keyTimes="0;0.4;1" calcMode="spline" ' +
-  'repeatCount="indefinite"/></ellipse></svg>';
+                    '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" ' +
+                    'y="0px" style="margin:-112px 0 0 -32px" width="136px"' +
+                    'height="150px" viewBox="0 0 136 150"><ellipse fill="#000" ' +
+                    'cx="32" cy="128" rx="36" ry="4"><animate attributeName="cx" ' +
+                    'from="32" to="32" begin="0s" dur="1.5s" values="96;32;96" ' +
+                    'keySplines=".6 .1 .8 .1; .1 .8 .1 1" keyTimes="0;0.4;1"' +
+                    'calcMode="spline" repeatCount="indefinite"/>' +
+                    '<animate attributeName="rx" from="36" to="36" begin="0s"' +
+                    'dur="1.5s" values="36;10;36" keySplines=".6 .0 .8 .0; .0 .8 .0 1"' +
+                    'keyTimes="0;0.4;1" calcMode="spline" repeatCount="indefinite"/>' +
+                    '<animate attributeName="opacity" from=".2" to=".2"  begin="0s" ' +
+                    ' dur="1.5s" values=".1;.7;.1" keySplines=" .6.0 .8 .0; .0 .8 .0 1" ' +
+                    'keyTimes=" 0;0.4;1" calcMode="spline" ' +
+                    'repeatCount="indefinite"/></ellipse><ellipse fill="#1b468d" ' +
+                    'cx="26" cy="20" rx="16" ry="12"><animate attributeName="cy" ' +
+                    'from="20" to="20" begin="0s" dur="1.5s" values="20;112;20" ' +
+                    'keySplines=".6 .1 .8 .1; .1 .8 .1 1" keyTimes=" 0;0.4;1" ' +
+                    'calcMode="spline" repeatCount="indefinite"/> ' +
+                    '<animate attributeName="ry" from="16" to="16" begin="0s" ' +
+                    'dur="1.5s" values="16;12;16" keySplines=".6 .0 .8 .0; .0 .8 .0 1" ' +
+                    'keyTimes="0;0.4;1" calcMode="spline" ' +
+                    'repeatCount="indefinite"/></ellipse></svg>';
                 var icon = new H.map.DomIcon(animatedSvg);
-                marker = new H.map.DomMarker(cord, {icon: icon});
+                marker = new H.map.DomMarker(cord, { icon: icon });
                 map.instance.addObject(marker);
+            },
+            SetRestaurentData: function () {
+                for (i = 0; i < window._app.$data.restarauntInfo.length; ++i) {
+                    var dataCollec = {
+                        lng: window._app.$data.restarauntInfo[i].Longitude,
+                        lat: window._app.$data.restarauntInfo[i].Latitude,
+                        Address: window._app.$data.restarauntInfo[i].Address,
+                        Name: window._app.$data.restarauntInfo[i].Name,
+                        Phone: window._app.$data.restarauntInfo[i].Phone
+                    }
+                    this.dataStore.push(dataCollec);
+                }
+                
+            },
+            RefreshMarker: function () {
+                console.log('RefreshMarker');
+                this.markerLocations = [];
+                this.dataStore.sort(function (a, b) { return 0.5 - Math.random() });
+                for (i = 0; i < this.dataStore.length; ++i) {
+
+                    //alert(center.lat);
+                    //alert(center.lng);
+
+                    if (parseFloat(this.dataStore[i].lng) + this.magicNumber > this.centerPosition.lng &&
+                        parseFloat(this.dataStore[i].lng) - this.magicNumber < this.centerPosition.lng &&
+                        parseFloat(this.dataStore[i].lat) + this.magicNumber > this.centerPosition.lat &&
+                        parseFloat(this.dataStore[i].lat) - this.magicNumber < this.centerPosition.lat) {
+
+                        var position = {
+                            lng: this.dataStore[i].lng,
+                            lat: this.dataStore[i].lat
+                        }
+                        this.markerLocations.push(position);
+                    }
+
+                    if (this.markerLocations.length > this.maxMarker) {
+                        break;
+                    }
+                }
+
+                console.log(this.dataStore.length);
+                console.log(this.markerLocations.length);
+
+                for (i = 0; i < this.markerContainer.length; ++i) {
+                    map.instance.removeObject(this.markerContainer[i]);
+                    this.markerContainer.shift();
+                    --i;
+                }
+
+                // Add a marker for each location found
+                for (i = 0; i < this.markerLocations.length; i++) {
+                    // marker = new H.map.Marker(position);
+                    var icon = new H.map.Icon(this.svgMarkup),
+                        marker = new H.map.Marker(this.markerLocations[i], { icon: icon });
+
+                    this.markerContainer.push(marker);
+                    map.instance.addObject(marker);
+                    // restaurantMap.setCenter(center);
+                }
+            },
+            restaurentDragEndCallBack: function () {
+                var that = this;
+
+                // Add event listener:
+                map.instance.addEventListener('dragend', function (evt) {
+                    // Log 'dragend' and 'mouse' events:
+                    console.log(evt.type, evt.currentPointer.type);
+                    that.centerPosition = map.instance.getCenter();
+                    console.log('center = ' + that.centerPosition);
+                });
+            },
+            clearBubble: function () {
+                for (i = 0; i < this.bubbleContainer.length; ++i) {
+                    this.bubbleContainer[i].close();
+                    this.bubbleContainer.shift();
+                    --i;
+                }
+            },
+            restaurentPointerUpCallBack: function () {
+                var that = this;
+
+                map.instance.addEventListener('pointerup', function (evt) {
+                    // Log 'dragend' and 'mouse' events:
+                    that.clearBubble();
+
+                    if (evt.target.type == 3) {
+                        console.log(evt.type, evt.target.getPosition());
+                        console.log(that.markerContainer.length);
+                        var index;
+                        for (i = 0; i < that.dataStore.length; ++i) {
+                            if (that.dataStore[i].lat == evt.target.getPosition().lat && that.dataStore[i].lng == evt.target.getPosition().lng) {
+                                console.log('found');
+                                index = i;
+                                break;
+                            }
+                        }
+
+                        // Create an info bubble object at a specific geographic location:
+                        var bubble = new H.ui.InfoBubble({ lng: that.dataStore[index].lng, lat: that.dataStore[index].lat }, {
+                            content: '店名：<div>' + that.dataStore[index].Name + '</div>' + '電話：<div>' + that.dataStore[index].Phone + '</div>' + '住址：<div>' + that.dataStore[index].Address + '</div>'
+                        });
+
+                        // Add info bubble to the UI:
+                        map.ui.addBubble(bubble);
+                        that.bubbleContainer.push(bubble);
+                    }
+
+                });
+            },
+            restaurentMapViewChangeEndCallBack: function () {
+                var that = this;
+
+                map.instance.addEventListener('mapviewchangeend', function () {
+                    that.oldMapZoom = map.instance.getZoom();
+
+                    that.magicNumber = that.magicDiff + (18 - that.oldMapZoom) * (18 - that.oldMapZoom) * that.magicDiff;
+
+                    console.log(that.oldMapZoom);
+                    console.log(that.magicNumber);
+
+                    if (that.oldMapZoom > 10) {
+                        that.RefreshMarker();
+                    }
+                });
             }
         }
     });
@@ -171,18 +311,18 @@ Vue.component('key-thumbnail',
     {
         props: ["original", "thumbnail"],
 
-        data: function() {
+        data: function () {
             return {
                 isEnlarged: false
             };
         },
 
         methods: {
-            onClickThumb: function() {
+            onClickThumb: function () {
                 this.isEnlarged = true;
             },
 
-            onClickOriginal: function() {
+            onClickOriginal: function () {
                 this.isEnlarged = false;
             }
         },
@@ -209,7 +349,7 @@ const HomeView = Vue.component('home-view', {
     },
 
     methods: {
-        onClickGo: function() {
+        onClickGo: function () {
             this.$router.push("language");
         }
 
@@ -230,7 +370,7 @@ const HomeView = Vue.component('home-view', {
  */
 const LanguageView = Vue.component('language-view',
     {
-        data: function() {
+        data: function () {
             return {
                 options: ["ENGLISH", "日本", "대한민국"]
 
@@ -238,7 +378,7 @@ const LanguageView = Vue.component('language-view',
         },
 
         methods: {
-            onClickLang: function() {
+            onClickLang: function () {
                 this.$router.push("setup");
             }
 
@@ -259,7 +399,7 @@ const LanguageView = Vue.component('language-view',
  */
 const SetupView = Vue.component('setup-view',
     {
-        data: function() {
+        data: function () {
             return {
                 address: "",
                 message: ""
@@ -270,29 +410,29 @@ const SetupView = Vue.component('setup-view',
                 <div><input v-model="address" /><button v-on:click="onClick">Locate!</button>{{ message }}</div>\
             </div>',
         methods: {
-            onClick: function() {
+            onClick: function () {
                 // Search map
-                var hereMap = this.$refs.hereMap; 
+                var hereMap = this.$refs.hereMap;
                 var map = hereMap.$data.map;
                 var geoParameters = {
                     searchText: this.$data.address
                 };
-                var onResult = function(result) {
+                var onResult = function (result) {
                     var locations = result.Response.View[0].Result,
                         position,
                         marker;
 
-                    if(locations.length == 0) {
+                    if (locations.length == 0) {
                         showMessage("No location found.");
                     }
-                    else if(locations.length > 1) {
-                        showMessage("More than one result found, please select the location."); 
-                        hereMap.createPoints({lng: 100.000, lat: 25.000});                 
-                    } 
-                    else {
-                        hereMap.createPoints({lng: 100.000, lat: 25.000});
+                    else if (locations.length > 1) {
+                        showMessage("More than one result found, please select the location.");
+                        hereMap.createPoints({ lng: 100.000, lat: 25.000 });
                     }
-                    
+                    else {
+                        hereMap.createPoints({ lng: 100.000, lat: 25.000 });
+                    }
+
 
 /*
                     for (i = 0;  i < locations.length; i++) {
@@ -305,17 +445,17 @@ const SetupView = Vue.component('setup-view',
                     }
 */                };
                 var geocoder = map.platform.getGeocodingService();
-                geocoder.geocode(geoParameters, onResult, function(e) {
+                geocoder.geocode(geoParameters, onResult, function (e) {
                     alert(e);
                 });
-            }, 
-            showMesage: function(m) {
+            },
+            showMesage: function (m) {
                 message = m;
             }
 
-            
 
-            
+
+
         }
     });
 
@@ -335,7 +475,7 @@ const AirportNavView = Vue.component('airport-nav-view',
 
 
         computed: {
-            geo: function() {
+            geo: function () {
                 return window._app ? window._app.$data.currentPosition : "";
 
             }
@@ -474,11 +614,27 @@ const RestaurantView = Vue.component('restaurant-view',
             return {
             }
         },
+        mounted: function () {
+            // call map init on layout 
+            window._app.$refs.globalMapInstance.SetRestaurentData();
+            window._app.$refs.globalMapInstance.centerMaps();
+            window._app.$refs.globalMapInstance.restaurentDragEndCallBack();
+            window._app.$refs.globalMapInstance.restaurentPointerUpCallBack();
+            window._app.$refs.globalMapInstance.restaurentMapViewChangeEndCallBack();
+        },
         template:
             '<div class="setup-container">\
                 <div>restaurant view</div>\
                 <way-nav-view current="4"></way-nav-view>\
-            </div>'
+            </div>',
+        methods: {
+            /*
+            onClickMap: function () {
+                window._app.$refs.globalMapInstance.centerMaps();
+                window._app.$refs.globalMapInstance.restaurentDragEndCallBack();
+            }
+            */
+        }
     });
 
 
@@ -518,7 +674,7 @@ const router = new VueRouter({
  * ===============================================
  *
  */
-const app = window._app =  new Vue({
+const app = window._app = new Vue({
     el: "#app",
     router,
 
@@ -535,7 +691,7 @@ const app = window._app =  new Vue({
     },
 
     computed: {
-        location: function() {
+        location: function () {
             return "Taiwan";
         }
     },
@@ -554,7 +710,7 @@ const app = window._app =  new Vue({
         }
     },
 
-    mounted: function() {
+    mounted: function () {
         this.getGeoLocation();
         var that = this;
         this.geoLocIntervalId = setInterval( function(){ 

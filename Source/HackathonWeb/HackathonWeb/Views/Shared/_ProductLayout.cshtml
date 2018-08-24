@@ -25,7 +25,8 @@
             },
             platform: {},
             maptypes: {},
-            instance: {}
+            instance: {},
+            ui: {}
         };
 
         function setupHereMap(elementId) {
@@ -36,7 +37,7 @@
                 map.maptypes.normal.map);
             var mapEvents = new H.mapevents.MapEvents(map.instance);
             var behavior = new H.mapevents.Behavior(mapEvents);
-            var ui = H.ui.UI.createDefault(map.instance, map.maptypes);
+            map.ui = H.ui.UI.createDefault(map.instance, map.maptypes);
             return map;
         }
     </script>
