@@ -101,17 +101,31 @@ Vue.component('here-map1',
         props:['mapDivId'],
 
         data: function() {
-            return {}
+            return {
+                map: {}
+            }
         },
 
         mounted: function () {
             // call map init on layout 
-            window.setupHereMap(this.mapDivId);
-
+            this.$data.map = window.setupHereMap(this.mapDivId);
         },
 
-        template: '<div :id="mapDivId" class="here-map-box"></div>'
+        template: '<div :id="mapDivId" class="here-map-box"></div>',
 
+        methods: {
+            createPoints: function(...p) {
+                map.instance.removeObjects(map.instance.getObjects());
+                for(var i=0; i<p.length; i++) {
+                    position = {
+                        lat: p[i].location.lat,
+                        lng: p[i].location.lng
+                    };
+                    marker = new H.map.Marker(position);
+                    this.$data.map.instance.addObject(marker);
+                }
+            }
+        }
     });
 
 /**
@@ -213,13 +227,63 @@ const SetupView = Vue.component('setup-view',
     {
         data: function() {
             return {
+                address: "",
+                message: ""
             }
         },
         template:
             '<div class="setup-container">\
-                <div>Setup your address here. Show HERE(tm) map here. Show the route here.</div>\
-                <here-map1 map-div-id="setupViewMap"></here-map1>\
-            </div>'
+                <div><input v-model="address" /><button v-on:click="onClick">Locate!</button>{{ message }}</div>\
+                <here-map1 map-div-id="hereMap" ref="hereMap"></here-map1>\
+            </div>',
+        methods: {
+            onClick: function() {
+                // Search map
+                var hereMap = this.$refs.hereMap; 
+                var map = hereMap.$data.map;
+                var geoParameters = {
+                    searchText: this.$data.address
+                };
+                var onResult = function(result) {
+                    var locations = result.Response.View[0].Result,
+                        position,
+                        marker;
+
+                    if(locations.length == 0) {
+                        showMessage("No location found.");
+                    }
+                    else if(locations.length > 1) {
+                        showMessage("More than one result found, please select the location."); 
+                        hereMap.createPoints({lng: 100.000, lat: 25.000});                 
+                    } 
+                    else {
+                        hereMap.createPoints({lng: 100.000, lat: 25.000});
+                    }
+                    
+
+/*
+                    for (i = 0;  i < locations.length; i++) {
+                        position = {
+                            lat: locations[i].Location.DisplayPosition.Latitude,
+                            lng: locations[i].Location.DisplayPosition.Longitude
+                        };
+                        marker = new H.map.Marker(position);
+                        map.instance.addObject(marker);
+                    }
+*/                };
+                var geocoder = map.platform.getGeocodingService();
+                geocoder.geocode(geoParameters, onResult, function(e) {
+                    alert(e);
+                });
+            }, 
+            showMesage: function(m) {
+                message = m;
+            }
+
+            
+
+            
+        }
     });
 
 /**
@@ -419,12 +483,24 @@ const app = window._app =  new Vue({
                 that.longitude = position.coords.longitude;
                 that.latitude = position.coords.latitude;
             });
+        },
+        raiseEvent: function() {
+            var event = new CustomEvent('location', {detail: {lat: this.$data.latitude, lng: this.$data.longitude}});
+            document.dispatchEvent(event);
         }
+        
     },
 
     mounted: function() {
         this.getGeoLocation();
+    },
+
+    watch: {
+        latitude: function(v) { this.raiseEvent(); }, 
+        longitude: function(v) { this.raiseEvent(); }
     }
+
+    
 
 
 });
