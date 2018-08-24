@@ -18,14 +18,9 @@
     <link rel="stylesheet" type="text/css"
           href="http://js.api.here.com/v3/3.0/mapsjs-ui.css" />
     <script type="text/javascript" charset="utf-8">
-        var map = {
-            configuration: {
-                'app_id': '9shB49HQGahETgr6LWDZ',
-                'app_code': '3CPwa96KM9xO-Z90EOBNig'
-            },
-            platform: {},
-            maptypes: {},
-            instance: {}
+        var mapConfiguration = {
+            'app_id': '9shB49HQGahETgr6LWDZ',
+            'app_code': '3CPwa96KM9xO-Z90EOBNig'
         };
 
         function setupHereMap(elementId) {
@@ -42,3 +37,12 @@
         @RenderBody()
     </body>
 </html>
+
+        var map = {
+            configuration: {
+                'app_id': '9shB49HQGahETgr6LWDZ',
+                'app_code': '3CPwa96KM9xO-Z90EOBNig'
+            },
+            platform: {},
+            maptypes: {},
+            instance: {}

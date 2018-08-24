@@ -121,25 +121,27 @@ Vue.component('here-map1',
  */
 Vue.component('key-thumbnail',
     {
-        prop: ["image"],
+        props: ["original", "thumbnail"],
 
         data: function() {
-            return {};
+            return {
+                isEnlarged: false
+            };
         },
 
         methods: {
-            getEnlargedStyle: function() {
-                return {};
+            onClickThumb: function() {
+                this.isEnlarged = true;
             },
 
-            getThumbStyle: function() {
-                return {};
+            onClickOriginal: function() {
+                this.isEnlarged = false;
             }
         },
 
         template: '<div class="key-thumb-box">\
-            <div class="enlarged-view" :style="getEnlargedStyle"><div>\
-            <div class="thumb-view" :style="getThumbStyle""><div>\
+            <div class="thumb-view" v-show="!isEnlarged"><div :class="thumbnail" v-on:click="onClickThumb"></div></div>\
+            <div class="enlarged-view" v-show="isEnlarged"><h3>You Should See</h3><div :class="original" v-on:click="onClickOriginal"></div></div>\
         </div>'
 
 
@@ -248,6 +250,7 @@ const AirportNavView = Vue.component('airport-nav-view',
             '<div class="setup-container">\
                 <div class="map-view">airport nav view</div><span>{{ geo }}</span>\
                 <way-nav-view current="0"></way-nav-view>\
+                <key-thumbnail original="key-pic-airport" thumbnail="thumb-key-pic-airport"></key-thumbnail>\
             </div>'
     });
 

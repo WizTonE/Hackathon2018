@@ -144,6 +144,7 @@
     <Content Include="Scripts\assets\img-uber.png" />
     <Content Include="Scripts\assets\img-underline_gray.png" />
     <Content Include="Scripts\assets\img-underline_white.png" />
+    <Content Include="Scripts\key-pic\elevator-airport.jpg" />
     <Content Include="Scripts\product.css" />
     <Content Include="Scripts\product.js" />
     <Content Include="Views\Web.config" />
