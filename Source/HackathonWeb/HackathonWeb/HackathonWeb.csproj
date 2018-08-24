@@ -103,6 +103,7 @@
     <Compile Include="Models\MRTElevator.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\Restaurant.cs" />
+    <Compile Include="Models\Taxi.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\assets\bg-green-01.png" />
@@ -161,6 +162,7 @@
     <Content Include="OpenDataSource\Hotel.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="OpenDataSource\accessibletaxi.json" />
     <None Include="OpenDataSource\MRTElevators.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -395,8 +395,7 @@ const UberNavView = Vue.component('uber-nav-view',
                 window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]="+currentPosition.latitude+"&pickup[longitude]="+currentPosition.longitude+"&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
             },
             onClickTaxiIcon: function () {
-                var currentPosition = window._app.$data.currentPosition;
-                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]=" + currentPosition.latitude + "&pickup[longitude]=" + currentPosition.longitude + "&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
+                this.alert(window._app.$data.taxiInfo[0]);
             },
             onClickMap : function(){
                 window._app.$refs.globalMapInstance.centerMaps();
@@ -523,8 +522,9 @@ const app = window._app =  new Vue({
         currentPosition: {longitude:0,latitude:0},
         destPosition: {longitude:0,latitude:0},
         isMapVisible: true,
-        geoLocIntervalId: -1
-
+        geoLocIntervalId: -1,
+        restarauntInfo: window.RestarauntInfo,
+        taxiInfo: window.TaxiInfo
     },
 
     computed: {
