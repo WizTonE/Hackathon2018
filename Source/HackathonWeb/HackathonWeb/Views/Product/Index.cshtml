@@ -6,7 +6,7 @@
 }
 
 <div id="app" class="main-app-container">
-    <div class="app-title"><span class="app-tag-line">{{ tagLine }}. CodeMonkey @@ 2018 Hackthon</span><small> ( {{ latitude }} | {{ longitude }} )</small></div>
+    <div class="app-title"><span class="app-tag-line">{{ tagLine }}. CodeMonkey @@ 2018 Hackthon</span><small> ( {{ currentPosition.latitude }} | {{ currentPosition.longitude }} )</small></div>
     
 
 
@@ -16,6 +16,8 @@
     <div id="app-content" class="content-view">
         <router-view></router-view>
     </div>
+
+    <here-map1 v-show="isMapVisible" map-div-id="globalMap" ref="globalMapInstance"></here-map1>
     
     <div id="app-nav" class="nav-view-box">
 
@@ -34,6 +36,8 @@
 
 
     </div>
+
+
 
 </div>
 

@@ -101,17 +101,65 @@ Vue.component('here-map1',
         props:['mapDivId'],
 
         data: function() {
-            return {}
+            return {
+                map: {}
+            }
         },
 
         mounted: function () {
             // call map init on layout 
-            window.setupHereMap(this.mapDivId);
-
+            this.$data.map = window.setupHereMap(this.mapDivId);
         },
 
-        template: '<div :id="mapDivId" class="here-map-box"></div>'
+        template: '<div :id="mapDivId" class="here-map-box global-map-box"></div>',
 
+        methods: {
+            createPoints: function(...p) {
+                map.instance.removeObjects(map.instance.getObjects());
+                for(var i=0; i<p.length; i++) {
+                    position = {
+                        lat: p[i].location.lat,
+                        lng: p[i].location.lng
+                    };
+                    marker = new H.map.Marker(position);
+                    this.$data.map.instance.addObject(marker);
+                }
+            },
+            centerMaps: function(){
+                window._app.getGeoLocation();
+                var latitude = window._app.$data.currentPosition.latitude;
+                var longitude = window._app.$data.currentPosition.longitude;
+                var cord = {lat: latitude, lng: longitude}
+                map.instance.setCenter(cord);
+                map.instance.setZoom(17);
+                var animatedSvg =
+  '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" ' + 
+  'y="0px" style="margin:-112px 0 0 -32px" width="136px"' + 
+  'height="150px" viewBox="0 0 136 150"><ellipse fill="#000" ' +
+  'cx="32" cy="128" rx="36" ry="4"><animate attributeName="cx" ' + 
+  'from="32" to="32" begin="0s" dur="1.5s" values="96;32;96" ' + 
+  'keySplines=".6 .1 .8 .1; .1 .8 .1 1" keyTimes="0;0.4;1"' + 
+  'calcMode="spline" repeatCount="indefinite"/>' +  
+  '<animate attributeName="rx" from="36" to="36" begin="0s"' +
+  'dur="1.5s" values="36;10;36" keySplines=".6 .0 .8 .0; .0 .8 .0 1"' + 
+  'keyTimes="0;0.4;1" calcMode="spline" repeatCount="indefinite"/>' +
+  '<animate attributeName="opacity" from=".2" to=".2"  begin="0s" ' +
+  ' dur="1.5s" values=".1;.7;.1" keySplines=" .6.0 .8 .0; .0 .8 .0 1" ' +
+  'keyTimes=" 0;0.4;1" calcMode="spline" ' +
+  'repeatCount="indefinite"/></ellipse><ellipse fill="#1b468d" ' +
+  'cx="26" cy="20" rx="16" ry="12"><animate attributeName="cy" ' +
+  'from="20" to="20" begin="0s" dur="1.5s" values="20;112;20" ' +
+  'keySplines=".6 .1 .8 .1; .1 .8 .1 1" keyTimes=" 0;0.4;1" ' +
+  'calcMode="spline" repeatCount="indefinite"/> ' +
+  '<animate attributeName="ry" from="16" to="16" begin="0s" ' + 
+  'dur="1.5s" values="16;12;16" keySplines=".6 .0 .8 .0; .0 .8 .0 1" ' +
+  'keyTimes="0;0.4;1" calcMode="spline" ' +
+  'repeatCount="indefinite"/></ellipse></svg>';
+                var icon = new H.map.DomIcon(animatedSvg);
+                marker = new H.map.DomMarker(cord, {icon: icon});
+                map.instance.addObject(marker);
+            }
+        }
     });
 
 /**
@@ -213,13 +261,62 @@ const SetupView = Vue.component('setup-view',
     {
         data: function() {
             return {
+                address: "",
+                message: ""
             }
         },
         template:
             '<div class="setup-container">\
-                <div>Setup your address here. Show HERE(tm) map here. Show the route here.</div>\
-                <here-map1 map-div-id="setupViewMap"></here-map1>\
-            </div>'
+                <div><input v-model="address" /><button v-on:click="onClick">Locate!</button>{{ message }}</div>\
+            </div>',
+        methods: {
+            onClick: function() {
+                // Search map
+                var hereMap = this.$refs.hereMap; 
+                var map = hereMap.$data.map;
+                var geoParameters = {
+                    searchText: this.$data.address
+                };
+                var onResult = function(result) {
+                    var locations = result.Response.View[0].Result,
+                        position,
+                        marker;
+
+                    if(locations.length == 0) {
+                        showMessage("No location found.");
+                    }
+                    else if(locations.length > 1) {
+                        showMessage("More than one result found, please select the location."); 
+                        hereMap.createPoints({lng: 100.000, lat: 25.000});                 
+                    } 
+                    else {
+                        hereMap.createPoints({lng: 100.000, lat: 25.000});
+                    }
+                    
+
+/*
+                    for (i = 0;  i < locations.length; i++) {
+                        position = {
+                            lat: locations[i].Location.DisplayPosition.Latitude,
+                            lng: locations[i].Location.DisplayPosition.Longitude
+                        };
+                        marker = new H.map.Marker(position);
+                        map.instance.addObject(marker);
+                    }
+*/                };
+                var geocoder = map.platform.getGeocodingService();
+                geocoder.geocode(geoParameters, onResult, function(e) {
+                    alert(e);
+                });
+            }, 
+            showMesage: function(m) {
+                message = m;
+            }
+
+            
+
+            
+        }
     });
 
 /**
@@ -239,7 +336,7 @@ const AirportNavView = Vue.component('airport-nav-view',
 
         computed: {
             geo: function() {
-                return window._app ? window._app.$data.latitude : "";
+                return window._app ? window._app.$data.currentPosition : "";
 
             }
 
@@ -291,11 +388,26 @@ const UberNavView = Vue.component('uber-nav-view',
             return {
             }
         },
+
+        methods:{
+            onClickIcon : function(){
+                var currentPosition = window._app.$data.currentPosition;
+                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]="+currentPosition.latitude+"&pickup[longitude]="+currentPosition.longitude+"&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
+            },
+            onClickMap : function(){
+                window._app.$refs.globalMapInstance.centerMaps();
+            }
+        },
+
+        created: function () {
+            window._app.$data.isMapVisible = true;
+        },
+
         template:
+
             '<div class="setup-container">\
-                <div class="map-view">\
-                    <div><div><iframe width="100%" height="1500" src="https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]=25.077883&pickup[longitude]=121.5727394&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home" frameborder="0" allowfullscreen></iframe></div></div>\
-                </div>\
+                <span class="icon-uber" v-on:click="onClickIcon"></span>\
+                <span class="icon-centerMap" v-on:click="onClickMap">Center </span>\
                 <way-nav-view current="2"></way-nav-view>\
             </div>'
     });
@@ -399,10 +511,14 @@ const app = window._app =  new Vue({
     el: "#app",
     router,
 
+    
+
     data: {
         tagLine: "Always on the right track",
-        latitude: 0,
-        longitude: 0
+        currentPosition: {longitude:0,latitude:0},
+        destPosition: {longitude:0,latitude:0},
+        isMapVisible: true,
+        geoLocIntervalId: -1
 
     },
 
@@ -416,16 +532,23 @@ const app = window._app =  new Vue({
         getGeoLocation: function () {
             var that = this;
             navigator.geolocation.getCurrentPosition(function (position) {
-                that.longitude = position.coords.longitude;
-                that.latitude = position.coords.latitude;
+                that.$data.currentPosition.longitude = position.coords.longitude;
+                that.$data.currentPosition.latitude = position.coords.latitude;
             });
+        },
+        raiseEvent: function() {
+            var event = new CustomEvent('location', {detail: {lat: this.$data.currentPosition.latitude, lng: this.$data.currentPosition.longitude}});
+            document.dispatchEvent(event);
         }
     },
 
     mounted: function() {
         this.getGeoLocation();
-    }
+        var that = this;
+        this.geoLocIntervalId = setInterval( function(){ 
+            that.getGeoLocation();
+        } , 3000 )
 
-
+    },
 });
 
