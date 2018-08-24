@@ -45,15 +45,17 @@ namespace HackathonWeb
                     CarParkInfo = data[13],
                     Wifi = data[14],
                     Charger = data[15],
-                    Type = data[16],
-                    FriendlyInfo = data[17]
+                    //Type = data[16].Replace(@"\""", ""),
+                    //FriendlyInfo = data[17].Replace(@"\""", "")
                 };
             }).ToList());
-
+        
         private List<Hotel> _hotels;
         public List<Hotel> Hotels => _hotels?? (
             _hotels = JsonConvert.DeserializeObject<List<Hotel>>(File.ReadAllText(HttpContext.Current.Server.MapPath("~/OpenDataSource/Hotel.json"))));
 
+        private List<Taxi> _taxis;
+        public List<Taxi> Taxis => _taxis??(_taxis = JsonConvert.DeserializeObject<List<Taxi>>(File.ReadAllText(HttpContext.Current.Server.MapPath("~/OpenDataSource/accessibletaxi.json"))));
         private OpenDataStorage()
         {
         }

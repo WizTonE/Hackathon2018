@@ -521,12 +521,15 @@ const UberNavView = Vue.component('uber-nav-view',
             }
         },
 
-        methods: {
-            onClickIcon: function () {
+        methods:{
+            onClickUberIcon : function(){
                 var currentPosition = window._app.$data.currentPosition;
-                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]=" + currentPosition.latitude + "&pickup[longitude]=" + currentPosition.longitude + "&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
+                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]="+currentPosition.latitude+"&pickup[longitude]="+currentPosition.longitude+"&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
             },
-            onClickMap: function () {
+            onClickTaxiIcon: function () {
+                this.alert(window._app.$data.taxiInfo[0]);
+            },
+            onClickMap : function(){
                 window._app.$refs.globalMapInstance.centerMaps();
             }
         },
@@ -538,7 +541,8 @@ const UberNavView = Vue.component('uber-nav-view',
         template:
 
             '<div class="setup-container">\
-                <span class="icon-uber" v-on:click="onClickIcon"></span>\
+                <span class="icon-uber" v-on:click="onClickUberIcon"></span>\
+                <span class="icon-taxi-info-box" v-on:click="onClickTaxiIcon"></span>\
                 <span class="icon-centerMap" v-on:click="onClickMap">Center </span>\
                 <way-nav-view current="2"></way-nav-view>\
             </div>'
@@ -658,15 +662,16 @@ const app = window._app = new Vue({
     el: "#app",
     router,
 
-
+    
 
     data: {
         tagLine: "Always on the right track",
-        currentPosition: { longitude: 0, latitude: 0 },
-        destPosition: { longitude: 0, latitude: 0 },
+        currentPosition: {longitude:0,latitude:0},
+        destPosition: {longitude:0,latitude:0},
         isMapVisible: true,
-        geoLocIntervalId: -1
-
+        geoLocIntervalId: -1,
+        restarauntInfo: window.RestarauntInfo,
+        taxiInfo: window.TaxiInfo
     },
 
     computed: {
@@ -683,8 +688,8 @@ const app = window._app = new Vue({
                 that.$data.currentPosition.latitude = position.coords.latitude;
             });
         },
-        raiseEvent: function () {
-            var event = new CustomEvent('location', { detail: { lat: this.$data.currentPosition.latitude, lng: this.$data.currentPosition.longitude } });
+        raiseEvent: function() {
+            var event = new CustomEvent('location', {detail: {lat: this.$data.currentPosition.latitude, lng: this.$data.currentPosition.longitude}});
             document.dispatchEvent(event);
         }
     },
@@ -692,9 +697,9 @@ const app = window._app = new Vue({
     mounted: function () {
         this.getGeoLocation();
         var that = this;
-        this.geoLocIntervalId = setInterval(function () {
+        this.geoLocIntervalId = setInterval( function(){ 
             that.getGeoLocation();
-        }, 3000)
+        } , 3000 )
 
     },
 });
