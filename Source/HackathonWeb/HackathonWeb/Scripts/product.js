@@ -127,8 +127,8 @@ Vue.component('here-map1',
             },
             centerMaps: function(){
                 window._app.getGeoLocation();
-                var latitude = window._app.$data.latitude;
-                var longitude = window._app.$data.longitude;
+                var latitude = window._app.$data.currentPosition.latitude;
+                var longitude = window._app.$data.currentPosition.longitude;
                 var cord = {lat: latitude, lng: longitude}
                 map.instance.setCenter(cord);
                 map.instance.setZoom(17);
@@ -268,7 +268,6 @@ const SetupView = Vue.component('setup-view',
         template:
             '<div class="setup-container">\
                 <div><input v-model="address" /><button v-on:click="onClick">Locate!</button>{{ message }}</div>\
-                <here-map1 map-div-id="hereMap" ref="hereMap"></here-map1>\
             </div>',
         methods: {
             onClick: function() {
@@ -337,7 +336,7 @@ const AirportNavView = Vue.component('airport-nav-view',
 
         computed: {
             geo: function() {
-                return window._app ? window._app.$data.latitude : "";
+                return window._app ? window._app.$data.currentPosition : "";
 
             }
 
@@ -389,11 +388,26 @@ const UberNavView = Vue.component('uber-nav-view',
             return {
             }
         },
+
+        methods:{
+            onClickIcon : function(){
+                var currentPosition = window._app.$data.currentPosition;
+                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]="+currentPosition.latitude+"&pickup[longitude]="+currentPosition.longitude+"&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
+            },
+            onClickMap : function(){
+                window._app.$refs.globalMapInstance.centerMaps();
+            }
+        },
+
+        created: function () {
+            window._app.$data.isMapVisible = true;
+        },
+
         template:
+
             '<div class="setup-container">\
-                <div class="map-view">\
-                    <div><div><iframe width="100%" height="1500" src="https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]=25.077883&pickup[longitude]=121.5727394&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home" frameborder="0" allowfullscreen></iframe></div></div>\
-                </div>\
+                <span class="icon-uber" v-on:click="onClickIcon"></span>\
+                <span class="icon-centerMap" v-on:click="onClickMap">Center </span>\
                 <way-nav-view current="2"></way-nav-view>\
             </div>'
     });
@@ -452,229 +466,9 @@ const RestaurantView = Vue.component('restaurant-view',
         template:
             '<div class="setup-container">\
                 <div>restaurant view</div>\
-<here-map1 map-div-id="hereMap" ref="hereMap"></here-map1>\
-                <div>{{ Refresh }}</div>\
                 <way-nav-view current="4"></way-nav-view>\
-            </div>',
-        computed:{
-            Refresh: function(){
-                var center = {
-        lat: 25.04885,
-        lng: 121.521
-    };
-
-    
-    var magicDiff = 0.0017;
-    var magicNumber = magicDiff;
-    var oldMapZoom = 18;
-    var maxMarker = 200;
-    var markerLocations = [];
-    var markerContainer = [];
-    var bubbleContainer = [];
-
-    // Initialize the platform object:
-    var platform = new H.service.Platform({
-        'app_id': '9shB49HQGahETgr6LWDZ',
-        'app_code': '3CPwa96KM9xO-Z90EOBNig'
+            </div>'
     });
-
-// Search map
-                var restaurantMap = window._app.$refs.globalMapInstance;
-                var ui = window._app.$refs.globalMapInstance.mapUI;
-                var mapEvents = window._app.$refs.globalMapInstance.mapEvents;
-    // Add event listener:
-    restaurantMap.addEventListener('dragend', function(evt) {
-        // Log 'dragend' and 'mouse' events:
-        console.log(evt.type, evt.currentPointer.type);
-        var nowMapCenter = restaurantMap.getCenter();
-        center.lng = nowMapCenter.lng;
-        center.lat = nowMapCenter.lat;
-    });
-
-    function ClearBubble(address) {
-        for(i = 0; i < bubbleContainer.length; ++i)
-        {
-            bubbleContainer[i].close();
-            bubbleContainer.shift();
-            --i;
-        }
-    }
-
-    // Add event listener:
-    restaurantMap.addEventListener('pointerup', function(evt) {
-        // Log 'dragend' and 'mouse' events:
-        ClearBubble();
-    
-        if (evt.target.type == 3) {
-            console.log(evt.type, evt.target.getPosition());
-            console.log(markerContainer.length);
-            var index;
-            for (i = 0; i < dataPosition.length; ++i) {
-                if (dataPosition[i].lat == evt.target.getPosition().lat && dataPosition[i].lng == evt.target.getPosition().lng) {
-                    console.log('found');
-                    index = i;
-                    break;
-                }
-            }
-
-            console.log(dataAddress[index]);
-            console.log(dataStoreName[index]);
-            console.log(dataStoreTel[index]);
-
-            // Create an info bubble object at a specific geographic location:
-            var bubble = new H.ui.InfoBubble({ lng: dataPosition[index].lng, lat: dataPosition[index].lat }, {
-                content: '店名：<div>' + dataStoreName[index] + '</div>' + '電話：<div>' + dataStoreTel[index] + '</div>' + '住址：<div>' + dataAddress[index] + '</div>'
-            });
-
-            // Add info bubble to the UI:
-            ui.addBubble(bubble);
-            bubbleContainer.push(bubble);
-        }
-        
-    });
-
-
-    restaurantMap.addEventListener('mapviewchangeend', function() {
-        oldMapZoom = restaurantMap.getZoom(); 
-
-        magicNumber = magicDiff + (18 - oldMapZoom) * (18 - oldMapZoom) * magicDiff;
-
-        console.log(oldMapZoom);
-        console.log(magicNumber);
-
-        if(oldMapZoom > 10)
-        {
-            RefreshMarker();
-        }
-    });
-
-    // Define a variable holding SVG mark-up that defines an icon image:
-    var svgMarkup = '<svg width="24" height="24" ' +
-        'xmlns="http://www.w3.org/2000/svg">' +
-        '<rect stroke="white" fill="#1b468d" x="1" y="1" width="22" ' +
-        'height="22" /><text x="12" y="18" font-size="12pt" ' +
-        'font-family="Arial" font-weight="bold" text-anchor="middle" ' +
-        'fill="white">R</text></svg>';
-
-    // Create an icon, an object holding the latitude and longitude, and a marker:
-    var icon = new H.map.Icon(svgMarkup),
-        coords = {lng: 121.521, lat: 25.04885},
-        marker = new H.map.Marker(coords, {icon: icon});
-
-    // restaurantMap.addObject(marker);
-    // restaurantMap.setCenter(coords);
-
-    // Define a callback function to process the geocoding response:
-    var onRestaurantResult = function(result) {
-        var markerLocations = result.Response.View[0].Result,
-            position,
-            marker;
-        // Add a marker for each location found
-        for (i = 0;  i < markerLocations.length; i++) {
-            position = {
-                lat: markerLocations[i].Location.DisplayPosition.Latitude,
-                lng: markerLocations[i].Location.DisplayPosition.Longitude
-            };
-
-            // marker = new H.map.Marker(position);
-            var icon = new H.map.Icon(svgMarkup),
-                marker = new H.map.Marker(position, {icon: icon});
-
-            restaurantMap.addObject(marker);
-            restaurantMap.setCenter(position);
-        }
-    };
-    /*
-    // Create the parameters for the geocoding request:
-    var geocodingParams = {
-        searchText: '臺北市南港區三重路23號'
-    };
-
-    // Get an instance of the geocoding service:
-    var geocoder = platform.getGeocodingService();
-
-    // Call the geocode method with the geocoding parameters,
-    // the callback and an error callback function (called if a
-    // communication error occurs):
-    geocoder.geocode(geocodingParams, onRestaurantResult, function(e) {
-        alert(e);
-    });
-    */
-
-    function SearchRestaurant(address) {
-        // Create the parameters for the geocoding request:
-        var geocodingParams = {
-            searchText: address
-        };
-
-        // Get an instance of the geocoding service:
-        var geocoder = platform.getGeocodingService();
-
-        // Call the geocode method with the geocoding parameters,
-        // the callback and an error callback function (called if a
-        // communication error occurs):
-        geocoder.geocode(geocodingParams, onRestaurantResult, function(e) {
-            alert(e);
-        });
-
-    };
-
-    // alert('@Model[1].Address');
-
-    function RefreshMarker() {
-        markerLocations = [];
-        dataPosition.sort(function(a, b){return 0.5 - Math.random()});
-        for (i = 0; i < dataPosition.length; ++i) {
-
-            //alert(dataPosition[i].lat);
-            //alert(dataPosition[i].lng);
-
-            //alert(center.lat);
-            //alert(center.lng);
-
-            // alert(parseFloat(dataPosition[i].lng) + magicNumber);
-            if (parseFloat(dataPosition[i].lng) + magicNumber > center.lng &&
-                parseFloat(dataPosition[i].lng) - magicNumber < center.lng &&
-                parseFloat(dataPosition[i].lat) + magicNumber > center.lat &&
-                parseFloat(dataPosition[i].lat) - magicNumber < center.lat) {
-
-                markerLocations.push(dataPosition[i]);
-            }
-
-            if(markerLocations.length > maxMarker)
-            {
-                break;
-            }
-        }
-
-        console.log(dataPosition.length);
-        console.log(markerLocations.length);
-
-        for(i = 0; i < markerContainer.length; ++i)
-        {
-            restaurantMap.removeObject(markerContainer[i]);
-            markerContainer.shift();
-            --i;
-        }
-
-        // Add a marker for each location found
-        for (i = 0; i < markerLocations.length; i++) {
-            // marker = new H.map.Marker(position);
-            var icon = new H.map.Icon(svgMarkup),
-                marker = new H.map.Marker(markerLocations[i], { icon: icon });
-
-            markerContainer.push(marker);
-            restaurantMap.addObject(marker);
-            // restaurantMap.setCenter(center);
-        }
-
-    };
-
-    RefreshMarker();
-            }
-        }
-}
-);
 
 
 
@@ -717,11 +511,15 @@ const app = window._app =  new Vue({
     el: "#app",
     router,
 
+    
+
     data: {
         tagLine: "Always on the right track",
-        latitude: 0,
-        longitude: 0,
-        isMapVisible: true
+        currentPosition: {longitude:0,latitude:0},
+        destPosition: {longitude:0,latitude:0},
+        isMapVisible: true,
+        geoLocIntervalId: -1
+
     },
 
     computed: {
@@ -734,28 +532,23 @@ const app = window._app =  new Vue({
         getGeoLocation: function () {
             var that = this;
             navigator.geolocation.getCurrentPosition(function (position) {
-                that.longitude = position.coords.longitude;
-                that.latitude = position.coords.latitude;
+                that.$data.currentPosition.longitude = position.coords.longitude;
+                that.$data.currentPosition.latitude = position.coords.latitude;
             });
         },
         raiseEvent: function() {
-            var event = new CustomEvent('location', {detail: {lat: this.$data.latitude, lng: this.$data.longitude}});
+            var event = new CustomEvent('location', {detail: {lat: this.$data.currentPosition.latitude, lng: this.$data.currentPosition.longitude}});
             document.dispatchEvent(event);
         }
-        
     },
 
     mounted: function() {
         this.getGeoLocation();
+        var that = this;
+        this.geoLocIntervalId = setInterval( function(){ 
+            that.getGeoLocation();
+        } , 3000 )
+
     },
-
-    watch: {
-        latitude: function(v) { this.raiseEvent(); }, 
-        longitude: function(v) { this.raiseEvent(); }
-    }
-
-    
-
-
 });
 

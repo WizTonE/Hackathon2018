@@ -129,9 +129,6 @@ a:active { color: white; }
     
 }
 
-
-
-
 .map-view {
     width: 100%;
     position: absolute;
@@ -424,4 +421,31 @@ a:active { color: white; }
     position: fixed;
     left: 10px;
     top: 120px;
+}
+
+.icon-uber {
+    background: url("assets/img-uber.png") no-repeat;
+    width: 120px;
+    height: 120px;
+    position: absolute;
+    bottom: 250px;
+    left: 4px;
+    cursor: pointer;
+}
+
+.icon-centerMap {
+    background: url("assets/img-dot_green.png") no-repeat;
+    width: 120px;
+    height: 120px;
+    position: absolute;
+    bottom: 250px;
+    right: 4px;
+    cursor: pointer;
+}
+
+.global-map-box{
+    height: 70%;
+    position: absolute;
+    top: 0;
+    width: 100%;
 }
