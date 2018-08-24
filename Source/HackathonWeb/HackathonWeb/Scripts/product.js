@@ -107,10 +107,7 @@ Vue.component('here-map1',
                 magicNumber: 0,
                 oldMapZoom: 18,
                 maxMarker: 200,
-                dataAddress: [],
-                dataStoreName: [],
-                dataStoreTel: [],
-                dataPosition: [],
+                dataStore:[],
                 markerLocations: [],
                 markerContainer: [],
                 bubbleContainer: [],
@@ -178,24 +175,38 @@ Vue.component('here-map1',
                 marker = new H.map.DomMarker(cord, { icon: icon });
                 map.instance.addObject(marker);
             },
+            SetRestaurentData: function () {
+                for (i = 0; i < window._app.$data.restarauntInfo.length; ++i) {
+                    var dataCollec = {
+                        lng: window._app.$data.restarauntInfo[i].Longitude,
+                        lat: window._app.$data.restarauntInfo[i].Latitude,
+                        Address: window._app.$data.restarauntInfo[i].Address,
+                        Name: window._app.$data.restarauntInfo[i].Name,
+                        Phone: window._app.$data.restarauntInfo[i].Phone
+                    }
+                    this.dataStore.push(dataCollec);
+                }
+                
+            },
             RefreshMarker: function () {
+                console.log('RefreshMarker');
                 this.markerLocations = [];
-                this.dataPosition.sort(function (a, b) { return 0.5 - Math.random() });
-                for (i = 0; i < this.dataPosition.length; ++i) {
-
-                    //alert(dataPosition[i].lat);
-                    //alert(dataPosition[i].lng);
+                this.dataStore.sort(function (a, b) { return 0.5 - Math.random() });
+                for (i = 0; i < this.dataStore.length; ++i) {
 
                     //alert(center.lat);
                     //alert(center.lng);
 
-                    // alert(parseFloat(dataPosition[i].lng) + magicNumber);
-                    if (parseFloat(this.dataPosition[i].lng) + this.magicNumber > this.centerPosition.lng &&
-                        parseFloat(this.dataPosition[i].lng) - this.magicNumber < this.centerPosition.lng &&
-                        parseFloat(this.dataPosition[i].lat) + this.magicNumber > this.centerPosition.lat &&
-                        parseFloat(this.dataPosition[i].lat) - this.magicNumber < this.centerPosition.lat) {
+                    if (parseFloat(this.dataStore[i].lng) + this.magicNumber > this.centerPosition.lng &&
+                        parseFloat(this.dataStore[i].lng) - this.magicNumber < this.centerPosition.lng &&
+                        parseFloat(this.dataStore[i].lat) + this.magicNumber > this.centerPosition.lat &&
+                        parseFloat(this.dataStore[i].lat) - this.magicNumber < this.centerPosition.lat) {
 
-                        this.markerLocations.push(this.dataPosition[i]);
+                        var position = {
+                            lng: this.dataStore[i].lng,
+                            lat: this.dataStore[i].lat
+                        }
+                        this.markerLocations.push(position);
                     }
 
                     if (this.markerLocations.length > this.maxMarker) {
@@ -203,7 +214,7 @@ Vue.component('here-map1',
                     }
                 }
 
-                console.log(this.dataPosition.length);
+                console.log(this.dataStore.length);
                 console.log(this.markerLocations.length);
 
                 for (i = 0; i < this.markerContainer.length; ++i) {
@@ -231,6 +242,7 @@ Vue.component('here-map1',
                     // Log 'dragend' and 'mouse' events:
                     console.log(evt.type, evt.currentPointer.type);
                     that.centerPosition = map.instance.getCenter();
+                    console.log('center = ' + that.centerPosition);
                 });
             },
             clearBubble: function () {
@@ -251,21 +263,17 @@ Vue.component('here-map1',
                         console.log(evt.type, evt.target.getPosition());
                         console.log(that.markerContainer.length);
                         var index;
-                        for (i = 0; i < that.dataPosition.length; ++i) {
-                            if (that.dataPosition[i].lat == evt.target.getPosition().lat && that.dataPosition[i].lng == evt.target.getPosition().lng) {
+                        for (i = 0; i < that.dataStore.length; ++i) {
+                            if (that.dataStore[i].lat == evt.target.getPosition().lat && that.dataStore[i].lng == evt.target.getPosition().lng) {
                                 console.log('found');
                                 index = i;
                                 break;
                             }
                         }
 
-                        console.log(that.dataAddress[index]);
-                        console.log(that.dataStoreName[index]);
-                        console.log(that.dataStoreTel[index]);
-
                         // Create an info bubble object at a specific geographic location:
-                        var bubble = new H.ui.InfoBubble({ lng: that.dataPosition[index].lng, lat: that.dataPosition[index].lat }, {
-                            content: '店名：<div>' + that.dataStoreName[index] + '</div>' + '電話：<div>' + that.dataStoreTel[index] + '</div>' + '住址：<div>' + this.dataAddress[index] + '</div>'
+                        var bubble = new H.ui.InfoBubble({ lng: that.dataStore[index].lng, lat: that.dataStore[index].lat }, {
+                            content: '店名：<div>' + that.dataStore[index].Name + '</div>' + '電話：<div>' + that.dataStore[index].Phone + '</div>' + '住址：<div>' + that.dataStore[index].Address + '</div>'
                         });
 
                         // Add info bubble to the UI:
@@ -286,7 +294,7 @@ Vue.component('here-map1',
                     console.log(that.oldMapZoom);
                     console.log(that.magicNumber);
 
-                    if (this.oldMapZoom > 10) {
+                    if (that.oldMapZoom > 10) {
                         that.RefreshMarker();
                     }
                 });
@@ -601,6 +609,7 @@ const RestaurantView = Vue.component('restaurant-view',
         },
         mounted: function () {
             // call map init on layout 
+            window._app.$refs.globalMapInstance.SetRestaurentData();
             window._app.$refs.globalMapInstance.centerMaps();
             window._app.$refs.globalMapInstance.restaurentDragEndCallBack();
             window._app.$refs.globalMapInstance.restaurentPointerUpCallBack();
