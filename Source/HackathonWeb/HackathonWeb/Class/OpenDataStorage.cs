@@ -45,8 +45,8 @@ namespace HackathonWeb
                     CarParkInfo = data[13],
                     Wifi = data[14],
                     Charger = data[15],
-                    Type = data[16],
-                    FriendlyInfo = data[17]
+                    //Type = data[16].Replace(@"\""", ""),
+                    //FriendlyInfo = data[17].Replace(@"\""", "")
                 };
             }).ToList());
         

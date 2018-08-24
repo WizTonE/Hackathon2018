@@ -163,6 +163,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="OpenDataSource\accessibletaxi.json" />
+    <Content Include="OpenDataSource\accessible-restaurant.json" />
     <None Include="OpenDataSource\MRTElevators.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

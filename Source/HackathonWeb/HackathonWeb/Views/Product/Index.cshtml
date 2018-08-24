@@ -42,7 +42,11 @@
 </div>
 
 
-<script>var RestarauntInfo = JSON.parse('@ViewData["Restaraunts"]');
-    var TaxiInfo = JSON.parse('@ViewData["TaxiInfo"]');
+<script>
+    var TaxiInfo = JSON.parse('@Html.Raw(ViewData["TaxiInfo"])');
+    var RestarauntInfo = JSON.parse('@Html.Raw(ViewData["Restaraunts"])'.replace(/\n/g, "\\n")
+        .replace(/\r/g, "\\r")
+        .replace(/\t/g, "\\t")
+        .replace(/\f/g, "\\f"));
 </script>
 <script type="text/javascript" src="~/Scripts/product.js"></script>

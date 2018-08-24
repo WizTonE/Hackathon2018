@@ -10,7 +10,7 @@ namespace HackathonWeb.Controllers
         public ActionResult Index()
         {
             ProductModel model = new ProductModel();
-            ViewData["Restaraunts"] = JsonConvert.SerializeObject(OpenDataStorage.Instance.Restaurants);
+            ViewData["Restaraunts"] = System.IO.File.ReadAllText(System.Web.HttpContext.Current.Server.MapPath("~/OpenDataSource/accessible-restaurant.json"));
             ViewData["TaxiInfo"] = JsonConvert.SerializeObject(OpenDataStorage.Instance.Taxis);
             return View(model);
         }
