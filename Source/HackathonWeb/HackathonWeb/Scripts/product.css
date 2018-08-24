@@ -404,8 +404,14 @@ a:active { color: white; }
     border: #00726e solid 1px;
 }
 
+.thumb-view {
+    position: absolute;
+    right: 2rem;
+    bottom: 15rem;
+    pointer-events: auto;
+}
+
 .enlarged-view {
-    position: fixed;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -415,6 +421,7 @@ a:active { color: white; }
     border: #00726e solid 1px;
     padding: 1.5rem;
     background-color: #00726ef5;
+    pointer-events: auto;
 }
 
 
@@ -443,8 +450,11 @@ a:active { color: white; }
 
 .key-thumb-box {
     position: fixed;
-    left: 10px;
-    top: 120px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
 }
 
 .icon-uber {
