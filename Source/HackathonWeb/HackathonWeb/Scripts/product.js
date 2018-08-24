@@ -20,9 +20,24 @@ Vue.component('way-nav-view', {
     data: function () {
         return {
 
-            iconNames: ["airport", "metro", "taxi", "hotel"],
-            positionNames: ["Taiwan Taoyuan International Airport", "Taipei Metro System", "Accessible Taxi Driver", "Your Hotel"],
-            positionAddress: ["No. 9, Hangzhan S. Rd., Dayuan Dist., Taoyuan City", "On The Right Track", "By Your Side", "Your Hotel Address"]
+            iconNames: [
+                "airport",
+                "metro",
+                "taxi",
+                "hotel",
+                "hotel"],
+            positionNames: [
+                "Taiwan Taoyuan International Airport",
+                "Taipei Metro System",
+                "Accessible Taxi Driver",
+                "Your Hotel",
+                "Your Restaurant"],
+            positionAddress: [
+                "No. 9, Hangzhan S. Rd., Dayuan Dist., Taoyuan City",
+                "On The Right Track",
+                "By Your Side",
+                "Your Hotel Address",
+                "Your Restaurant Address"]
 
         } 
     },
@@ -48,7 +63,7 @@ Vue.component('way-nav-view', {
     methods: {
 
         onClickIcon: function (index) {
-            const viewNames = ["airport", "metro", "taxi", "hotel"];
+            const viewNames = ["airport", "metro", "taxi", "hotel", "restaurant"];
             this.$router.push(viewNames[index]);
         }
 
@@ -67,6 +82,7 @@ Vue.component('way-nav-view', {
         <div class="item metro" :class="{active : current == 1}" v-on:click="onClickIcon(1)"><div class="pos1"></div><div class="icon-metro"></div></div>\
         <div class="item taxi" :class="{active : current == 2}" v-on:click="onClickIcon(2)"><div class="pos2"></div><div class="icon-taxi"></div></div>\
         <div class="item hotel" :class="{active : current == 3}" v-on:click="onClickIcon(3)"><div class="pos3"></div><div class="icon-hotel"></div></div>\
+        <div class="item restaurant" :class="{active : current == 4}" v-on:click="onClickIcon(4)"><div class="pos4"></div><div class="icon-restaurant"></div></div>\
     </div>\
     <div class="location-details">\
         <div>Location Detail</div>\
@@ -79,6 +95,24 @@ Vue.component('way-nav-view', {
 
 
 });
+
+Vue.component('here-map1',
+    {
+        props:['mapDivId'],
+
+        data: function() {
+            return {}
+        },
+
+        mounted: function () {
+            // call map init on layout 
+            window.setupHereMap(this.mapDivId);
+
+        },
+
+        template: '<div :id="mapDivId" class="here-map-box"></div>'
+
+    });
 
 /**
  *
@@ -117,12 +151,20 @@ const LanguageView = Vue.component('language-view',
     {
         data: function() {
             return {
-                options: ["ENGLISH", "JAPANESE", "KOREA"]
+                options: ["ENGLISH", "日本", "대한민국"]
 
             }
         },
+
+        methods: {
+            onClickLang: function() {
+                this.$router.push("setup");
+            }
+
+        },
+
         template:
-            '<div class="language-container"><div class="language-item" v-for="option in options"> {{ option }}</div></div>'
+            '<div class="language-container"><div class="language-item" v-for="option in options" v-on:click=onClickLang> {{ option }}</div></div>'
     });
 
 /**
@@ -141,7 +183,10 @@ const SetupView = Vue.component('setup-view',
             }
         },
         template:
-            '<div class="setup-container"><div>Setup your address here. Show HERE(tm) map here. Show the route here.</div></div>'
+            '<div class="setup-container">\
+                <div>Setup your address here. Show HERE(tm) map here. Show the route here.</div>\
+                <here-map1 map-div-id="setupViewMap"></here-map1>\
+            </div>'
     });
 
 /**
@@ -190,8 +235,11 @@ const MetroNavView = Vue.component('metro-nav-view',
         },
         template:
             '<div class="setup-container">\
-                <div>metro nav view</div>\
-                <way-nav-view current="1"></way-nav-view>\
+                <div >\
+                  <img src="../Scripts/assets/mrt-Zhongshan.png" width="100%" height="100%"> \
+                  1.出口電梯：<br>出口4（南京西路北側之淡水線線形公園內）<br>出口5（南京西路與赤峰街交叉東北隅）<br>出口6（南京西路與赤峰街交叉東南隅）<br>2.月臺電梯：<br>淡水信義線：大廳層中央<br>松山新店線：大廳層東側<br>\
+                </div>\
+                <way-nav-view current="0"></way-nav-view>\
             </div>'
     });
 
@@ -210,7 +258,9 @@ const UberNavView = Vue.component('uber-nav-view',
         },
         template:
             '<div class="setup-container">\
-                <div>uber nav view</div>\
+                <div>\
+                    <div class="setup-container"><div><iframe width="100%" height="1500" src="https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]=25.077883&pickup[longitude]=121.5727394&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home" frameborder="0" allowfullscreen></iframe></div></div>\
+                </div>\
                 <way-nav-view current="2"></way-nav-view>\
             </div>'
     });
@@ -267,7 +317,10 @@ const RestaurantView = Vue.component('restaurant-view',
             }
         },
         template:
-            '<div class="setup-container"><div>restaurant view</div></div>'
+            '<div class="setup-container">\
+                <div>restaurant view</div>\
+                <way-nav-view current="4"></way-nav-view>\
+            </div>'
     });
 
 
@@ -282,6 +335,7 @@ const RestaurantView = Vue.component('restaurant-view',
  *
  */
 const productDefaultRoutes = [
+    { path: '/', component: HomeView },
     { path: '/home', component: HomeView },
     { path: '/language', component: LanguageView },
     { path: '/setup', component: SetupView },

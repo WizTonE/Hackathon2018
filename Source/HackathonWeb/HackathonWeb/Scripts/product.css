@@ -109,7 +109,7 @@ a:active { color: white; }
     height: 100%;
     position: relative;
     background: url("assets/bg-green-01.png") no-repeat;
-    background-position: cover;
+    background-size: cover;
 
     display: flex;
     flex-direction: column;
@@ -119,11 +119,17 @@ a:active { color: white; }
 .language-item {
     color: white;
     font-weight: bold;
-    font-size: 1.5em;
+    font-size: 3.5rem;
     text-align: left;
-    padding: 0.5em;
+    padding: 1rem;
+    border-bottom: #eeeeee;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    cursor: pointer;
     
 }
+
+
 
 
 .map-view {
@@ -264,6 +270,7 @@ a:active { color: white; }
     display: flex;
     flex-direction: column;
     align-items: center;
+    cursor: pointer;
 }
 
 .icon-airport {
@@ -290,6 +297,12 @@ a:active { color: white; }
     background: url("assets/img-hotel_green.png") no-repeat;
 }
 
+.position-selection .icon-restaurant {
+    width: 55px;
+    height: 55px;
+    background: url("assets/img-hotel_green.png") no-repeat;
+}
+
 .active .icon-airport{
     background: url("assets/img-airport_yellow.png") no-repeat;
 }
@@ -302,6 +315,12 @@ a:active { color: white; }
     width: 55px;
     height: 55px;
     background: url("assets/img-taxi_yellow.png") no-repeat;
+}
+
+.active .icon-hotel {
+    width: 55px;
+    height: 55px;
+    background: url("assets/img-hotel_yellow.png") no-repeat;
 }
 
 .active .icon-hotel {
@@ -327,4 +346,13 @@ a:active { color: white; }
     width: 60px;
     height: 60px;
     background: url("assets/img-elevator.png") no-repeat;
+
+}
+
+.here-map-box {
+    min-width: 640px;
+    min-height: 480px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
 }
