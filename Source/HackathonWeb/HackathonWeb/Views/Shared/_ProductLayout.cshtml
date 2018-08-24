@@ -7,7 +7,32 @@
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
     <link rel="stylesheet" href="~/Scripts/product.css" />
     <link href="https://fonts.googleapis.com/css?family=Montserrat:500" rel="stylesheet">
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
+            type="text/javascript" charset="utf-8"></script>
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js"
+            type="text/javascript" charset="utf-8"></script>
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-mapevents.js"
+            type="text/javascript" charset="utf-8"></script>
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-ui.js"
+            type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css"
+          href="http://js.api.here.com/v3/3.0/mapsjs-ui.css" />
+    <script type="text/javascript" charset="utf-8">
+        var mapConfiguration = {
+            'app_id': '9shB49HQGahETgr6LWDZ',
+            'app_code': '3CPwa96KM9xO-Z90EOBNig'
+        };
 
+        function setupHereMap(elementId, mapInitArgs) {
+            var platform = new H.service.Platform(mapConfiguration);
+            var maptypes = platform.createDefaultLayers();
+            var map = new H.Map(
+                document.getElementById(elementId),
+                maptypes.normal.map,
+                mapInitArgs);
+            return map;
+        }
+    </script>
 </head>
     <body>
         @RenderBody()
