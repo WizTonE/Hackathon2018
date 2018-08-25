@@ -899,7 +899,7 @@ const app = window._app = new Vue({
     data: {
         tagLine: "Always on the right track",
         currentPosition: {longitude:0,latitude:0},
-        destPosition: {longitude:0,latitude:0},
+        destPosition: { latitude: 25.054207, longitude:121.5215545},
         isMapVisible: false,
         geoLocIntervalId: -1,
         restarauntInfo: window.RestarauntInfo,
