@@ -837,11 +837,11 @@ const RestaurantView = Vue.component('restaurant-view',
         },
         mounted: function () {
             // call map init on layout 
-            window._app.$refs.globalMapInstance.SetRestaurentData();
-            window._app.$refs.globalMapInstance.centerMaps();
-            window._app.$refs.globalMapInstance.restaurentDragEndCallBack();
-            window._app.$refs.globalMapInstance.restaurentPointerUpCallBack();
-            window._app.$refs.globalMapInstance.restaurentMapViewChangeEndCallBack();
+//            window._app.$refs.globalMapInstance.SetRestaurentData();
+//            window._app.$refs.globalMapInstance.centerMaps();
+//            window._app.$refs.globalMapInstance.restaurentDragEndCallBack();
+//            window._app.$refs.globalMapInstance.restaurentPointerUpCallBack();
+//            window._app.$refs.globalMapInstance.restaurentMapViewChangeEndCallBack();
         },
         template:
             '<div class="setup-container">\
@@ -849,7 +849,18 @@ const RestaurantView = Vue.component('restaurant-view',
                 <way-nav-view current="4"></way-nav-view>\
             </div>',
         created: function () {
-            if (window._app) window._app.displayGlobalMap(true);
+            if (window._app) {
+                window._app.displayGlobalMap(true);
+                console.log(">>>set data of restaurant")
+                setTimeout(function() {
+                        window._app.$refs.globalMapInstance.SetRestaurentData();
+                        //window._app.$refs.globalMapInstance.centerMaps();
+                        window._app.$refs.globalMapInstance.restaurentDragEndCallBack();
+                        window._app.$refs.globalMapInstance.restaurentPointerUpCallBack();
+                        window._app.$refs.globalMapInstance.restaurentMapViewChangeEndCallBack();
+                    },
+                    1000);
+            }
         },
         methods: {
             /*
@@ -859,6 +870,8 @@ const RestaurantView = Vue.component('restaurant-view',
             }
             */
         }
+
+
     });
 
 
