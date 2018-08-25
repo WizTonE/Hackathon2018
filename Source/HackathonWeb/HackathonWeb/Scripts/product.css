@@ -505,6 +505,12 @@ a {
     bottom: 12.8rem;
 }
 
+.setup-top-box {
+    z-index: 200;
+    bottom: 5rem;
+    position: absolute;
+}
+
 .icon-taxi-info-box {
     background: url("assets/img-infomation_yellow-01.png") no-repeat;
     background-size: contain;
@@ -515,11 +521,4 @@ a {
     left: 35rem;
     cursor: pointer;
     z-index: 100;
-}
-
-.setup-container {
-    height: 20%;
-    top: 85%;
-    position: absolute;
-    width: 100%;
 }

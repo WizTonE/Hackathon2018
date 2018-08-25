@@ -452,7 +452,7 @@ const SetupView = Vue.component('setup-view',
             }
         },
         template:
-            `<div class="setup-container">
+            `<div class="setup-container setup-top-box">
                 <div>
                     <div id="address-search">Address: <input v-model="saddress" v-on:keydown="keyDownAddress" /></div>
                     <div id="place-search">Place: <input v-model="splace" v-on:keydown="keyDownPlace" /></div>
@@ -745,8 +745,8 @@ const UberNavView = Vue.component('uber-nav-view',
             onClickUberIcon : function(){
                 var currentPosition = window._app.$data.currentPosition;
                 var destPosition = window._app.$data.destPosition;
-                //window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]="+currentPosition.latitude+"&pickup[longitude]="+currentPosition.longitude+"&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Home", "_blank");
-                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]=" + currentPosition.latitude + "&pickup[longitude]=" + currentPosition.longitude + "&pickup[nickname]=CurrentPlace&dropoff[latitude]=" + destPosition.latitude + "&dropoff[longitude]=" + destPosition.longitude + "&dropoff[nickname]=Destination", "_blank");
+                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]="+currentPosition.latitude+"&pickup[longitude]="+currentPosition.longitude+"&pickup[nickname]=CurrentPlace&dropoff[latitude]=25.0596028&dropoff[longitude]=121.5602683&dropoff[nickname]=Destination", "_blank");
+//                window.open("https://m.uber.com/?client_id=2dv2-1SM7rwg9_ogbq3Sxe4BYuNQrDxi&action=setPickup&pickup[latitude]=" + currentPosition.latitude + "&pickup[longitude]=" + currentPosition.longitude + "&pickup[nickname]=CurrentPlace&dropoff[latitude]=" + destPosition.latitude + "&dropoff[longitude]=" + destPosition.longitude + "&dropoff[nickname]=Destination", "_blank");
             },
             onClickTaxiIcon: function () {
                 alert(
