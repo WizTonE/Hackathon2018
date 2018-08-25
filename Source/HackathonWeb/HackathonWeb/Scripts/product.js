@@ -142,16 +142,36 @@ Vue.component('here-map1',
             },
 
 
-            createPoints: function(...p) {
-                map.instance.removeObjects(map.instance.getObjects());
-                for (var i = 0; i < p.length; i++) {
-                    position = {
-                        lat: p[i].location.lat,
-                        lng: p[i].location.lng
-                    };
-                    marker = new H.map.Marker(position);
-                    this.$data.map.instance.addObject(marker);
+            removePoints: function(...p) {
+                for(var i=0; i<p.length; i++) {
+                    this.map.instance.removeObject(p[i]);
                 }
+            },
+            createPoints: function(...p) {
+                for(var i=0; i<p.length; i++) {
+                    position = {
+                        lat: p[i].Location.DisplayPosition.Latitude,
+                        lng: p[i].Location.DisplayPosition.Longitude
+                    };
+                    marker = new H.map.DomMarker(position);
+                    this.map.instance.addObject(marker);
+                }
+                return p;
+            }, 
+            createGroupPoints: function(group, ...p) {
+                if(group == undefined || group == null) {
+                    group = new H.map.Group();
+                    this.map.instance.addObject(group);
+                }
+                for(var i=0; i<p.length; i++) {
+                    position = {
+                        lat: p[i].Location.DisplayPosition.Latitude,
+                        lng: p[i].Location.DisplayPosition.Longitude
+                    };
+                    var marker = new H.map.DomMarker(position);
+                    group.addObject(marker);
+                }
+                return group;
             },
             centerMaps: function () {
                 window._app.getGeoLocation();
@@ -421,58 +441,215 @@ const SetupView = Vue.component('setup-view',
     {
         data: function () {
             return {
-                address: "",
-                message: ""
+                saddress: '',
+                splace: '',
+                message: '',
+                hotel: '',
+                address: '',
+                geo: null,
+                mapGroup: null,
+                routeGroup: []
             }
         },
         template:
-            '<div class="setup-container">\
-                <div><input v-model="address" /><button v-on:click="onClick">Locate!</button>{{ message }}</div>\
-            </div>',
+            `<div class="setup-container">
+                <div>
+                    <div id="address-search">Address: <input v-model="saddress" v-on:keydown="keyDownAddress" /></div>
+                    <div id="place-search">Place: <input v-model="splace" v-on:keydown="keyDownPlace" /></div>
+                    <div v-if="isShowNext"><button v-on:click="nextClick">Next</button></div>
+                </div>
+                <div class="map-view"></div>
+                <div class="info-view">
+                    <div id="message"> {{ message }}</div>
+                    <div id="hotel">Hotel: {{ hotel }}</div>
+                    <div id="address">Address: {{ address }}</div>
+
+                </div>
+            </div>`,
         methods: {
-            onClick: function () {
-                // Search map
-                var hereMap = this.$refs.hereMap;
-                var map = hereMap.$data.map;
-                var geoParameters = {
-                    searchText: this.$data.address
-                };
-                var onResult = function (result) {
-                    var locations = result.Response.View[0].Result,
-                        position,
-                        marker;
+            onSearchResult: function(result) {
+                this.removeExists();
+                var position, model = this;
+                this.mapGroup = new H.map.Group();
+                this.mapGroup.addEventListener('tap', function(evt) {
+                    model.setDest(evt.target.getData());
+                });
+                this.hereMap.addObject(this.mapGroup);
 
-                    if (locations.length == 0) {
-                        showMessage("No location found.");
-                    }
-                    else if (locations.length > 1) {
-                        showMessage("More than one result found, please select the location.");
-                        hereMap.createPoints({ lng: 100.000, lat: 25.000 });
-                    }
-                    else {
-                        hereMap.createPoints({ lng: 100.000, lat: 25.000 });
-                    }
-
-
-/*
-                    for (i = 0;  i < locations.length; i++) {
+                var markers = [];
+                if(result.Response != undefined && result.Response.View.length != 0) {
+                    //address
+                    var locations = result.Response.View[0].Result;
+                    markers = new Array(locations.length);
+                    for(var i=0; i<locations.length; i++) {
                         position = {
-                            lat: locations[i].Location.DisplayPosition.Latitude,
-                            lng: locations[i].Location.DisplayPosition.Longitude
+                           lat: locations[i].Location.DisplayPosition.Latitude,
+                           lng: locations[i].Location.DisplayPosition.Longitude
                         };
-                        marker = new H.map.Marker(position);
-                        map.instance.addObject(marker);
+                        markers[i] = new H.map.Marker(position);
+                        markers[i].setData({title: '', address: locations[i].Location.Address.Label, geo: position })
                     }
-*/                };
+                       
+                }
+                else if(result.results != undefined && result.results.items.length != 0) {
+                    //place
+                    var items = result.results.items;
+                    markers = new Array(items.length);
+                    for(var i=0; i<items.length; i++) {
+                        position = {
+                           lat: items[i].position[0],
+                           lng: items[i].position[1]
+                        };
+                        markers[i] = new H.map.Marker(position);
+                        markers[i].setData({title: items[i].title, address: items[i].vicinity, geo: position })
+                    }
+                }
+
+
+
+                if(markers.length == 0) 
+                    this.message = "No result found.";
+                else {
+                    for(var i=0; i<markers.length; i++)
+                        this.mapGroup.addObject(markers[i]);
+                    this.hereMap.setViewBounds(this.mapGroup.getBounds());
+                
+                    if(markers.length > 1)
+                        this.message = "Too many results, please select one."
+                    else {
+                        this.message = "";
+                        this.setDest(markers[0].getData());
+                    }
+                }
+
+
+                    
+
+            },
+
+            searchAddress: function() {
+                this.splace = '';
+                var geoParameters = { searchText: this.saddress };
                 var geocoder = map.platform.getGeocodingService();
-                geocoder.geocode(geoParameters, onResult, function (e) {
-                    alert(e);
+                geocoder.geocode(geoParameters, this.onSearchResult, function(e) {
+                    model.message = e.message;
                 });
             },
-            showMesage: function (m) {
-                message = m;
-            }
+            keyDownAddress: function(ev) {
+                if(ev.which == 13 || ev.keyCode == 13)
+                    this.searchAddress();
+            },
+            searchPlace: function() {
+                this.saddress = '';
+                var placeParameters = { q: this.splace, at:window._app.$data.currentPosition.latitude+","+window._app.$data.currentPosition.longitude  };
+                var explorer = new H.places.Search(this.map.platform.getPlacesService());
+                explorer.request(placeParameters, {}, this.onSearchResult, function(e) {
+                    this.message = e.message;
+                });
+            },
+            keyDownPlace: function(ev) {
+                if(ev.which == 13 || ev.keyCode == 13)
+                    this.searchPlace();
+            },
 
+            setDest: function(m) {
+                this.hotel = m.title;
+                this.address = m.address;
+                this.geo = m.geo;
+
+
+
+                //set navi
+                var current = window._app.$data.currentPosition;
+                var routeParameters = {
+                    mode: 'fastest;pedestrian', 
+                    waypoint0: 'geo!' + current.latitude + ',' + current.longitude,
+                    waypoint1: 'geo!' + m.geo.latitude + ',' + m.geo.longtitude,
+                    representation: 'display'
+                };
+                var model = this;
+                var onRouteResult = function(result) {
+                    var route,
+                        routeShape,
+                        startPoint,
+                        endPoint,
+                        linestring;
+                    if (result.response != undefined && result.response.route) {
+                        route = result.response.route[0];
+                        routeShape = route.shape;
+                        linestring = new H.geo.LineString();
+                        routeShape.forEach(function (point) {
+                            var parts = point.split(',');
+                            linestring.pushLatLngAlt(parts[0], parts[1]);
+                        });
+
+                        startPoint = route.waypoint[0].mappedPosition;
+                        endPoint = route.waypoint[1].mappedPosition;
+
+                        routeLine = new H.map.Polyline(linestring, {
+                            style: { lineWidth: 10 },
+                            arrows: { fillColor: 'white', frequency: 2, width: 0.8, length: 0.7 }
+                        });
+
+                        // Create a marker for the start point:
+                        var startMarker = new H.map.Marker({
+                            lat: startPoint.latitude,
+                            lng: startPoint.longitude
+                        });
+
+                        var endMarker = new H.map.Marker({
+                            lat: endPoint.latitude,
+                            lng: endPoint.longitude
+                        });
+
+                        // Add the route polyline and the two markers to the map:
+                        model.routeGroup = [routeLine, startMarker, endMarker];
+                        model.hereMap.addObjects(model.routeGroup);
+                        
+
+                        // Set the map's viewport to make the whole route visible:
+                        model.hereMap.setViewBounds(routeLine.getBounds());
+                   }
+                };
+                var router = this.map.platform.getRoutingService();
+                router.calculateRoute(routeParameters, onRouteResult,
+                    function (error) {
+                        alert(error.message);
+                    });
+            },
+            removeExists: function() {
+                if(this.mapGroup != null || this.mapGroup != undefined) {
+                    var objs = this.mapGroup.getObjects();
+                    if(objs != undefined) {
+                        for(var i=0; i<objs.length; i++)
+                            this.mapGroup.removeObject(objs[i]);
+                    }
+                }
+                if(this.routeGroup.length > 0){
+                    for(var i=0; i<this.routeGroup.length; i++)
+                        this.hereMap.removeObject(this.routeGroup[i]);
+                    this.routeGroup = [];
+                }
+                
+            },
+            nextClick: function() {
+                window._app.$data.destPosition = {longitude:this.geo.lat,latitude:this.geo.lng};
+                this.$router.push("airport");
+            }
+        },
+        computed: {
+            mapObject: function() {
+                return window._app.$refs.globalMapInstance;
+            },
+            map: function() {
+                return this.mapObject.$data.map;
+            },
+            hereMap: function() {
+                return this.map.instance;
+            },
+            isShowNext: function() {
+                return this.address.length != 0;
+            }
         },
 
         created: function() {

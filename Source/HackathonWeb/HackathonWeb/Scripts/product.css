@@ -516,3 +516,10 @@ a {
     cursor: pointer;
     z-index: 100;
 }
+
+.setup-container {
+    height: 20%;
+    top: 85%;
+    position: absolute;
+    width: 100%;
+}
