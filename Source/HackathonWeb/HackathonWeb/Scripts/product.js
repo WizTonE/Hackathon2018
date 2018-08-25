@@ -565,7 +565,7 @@ const SetupView = Vue.component('setup-view',
                 //set navi
                 var current = window._app.$data.currentPosition;
                 var routeParameters = {
-                    mode: 'fastest;pedestrian', 
+                    mode: 'fastest;publicTransport', 
 
                     //atitude]=25.0596028&dropoff[longitude]=121.5602683&
                     //
