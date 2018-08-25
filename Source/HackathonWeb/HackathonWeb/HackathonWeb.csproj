@@ -103,6 +103,7 @@
     <Compile Include="Models\MRTElevator.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\Restaurant.cs" />
+    <Compile Include="Models\Taxi.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\assets\bg-green-01.png" />
@@ -124,6 +125,8 @@
     <Content Include="Scripts\assets\img-hotel.png" />
     <Content Include="Scripts\assets\img-hotel_green.png" />
     <Content Include="Scripts\assets\img-hotel_yellow.png" />
+    <Content Include="Scripts\assets\img-infomation_green.png" />
+    <Content Include="Scripts\assets\img-infomation_yellow-01.png" />
     <Content Include="Scripts\assets\img-logo.png" />
     <Content Include="Scripts\assets\img-metro.png" />
     <Content Include="Scripts\assets\img-metro_green.png" />
@@ -142,13 +145,18 @@
     <Content Include="Scripts\assets\img-stage5_green.png" />
     <Content Include="Scripts\assets\img-stage5_yellow.png" />
     <Content Include="Scripts\assets\img-taxi.png" />
+    <Content Include="Scripts\assets\img-taxiinfo-01.png" />
     <Content Include="Scripts\assets\img-taxi_green.png" />
+    <Content Include="Scripts\assets\img-taxi_info.png" />
     <Content Include="Scripts\assets\img-taxi_yellow.png" />
+    <Content Include="Scripts\assets\img-uber-info.png" />
     <Content Include="Scripts\assets\img-uber.png" />
     <Content Include="Scripts\assets\img-underline_gray.png" />
     <Content Include="Scripts\assets\img-underline_white.png" />
+    <Content Include="Scripts\assets\mrt-Zhongshan.png" />
     <Content Include="Scripts\key-pic\elevator-airport.jpg" />
     <Content Include="Scripts\key-pic\elevator-metro.jpg" />
+    <Content Include="Scripts\key-pic\ZhongSangElevator.jpg" />
     <Content Include="Scripts\product.css" />
     <Content Include="Scripts\product.js" />
     <Content Include="Views\Web.config" />
@@ -164,6 +172,8 @@
     <Content Include="OpenDataSource\Hotel.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="OpenDataSource\accessibletaxi.json" />
+    <Content Include="OpenDataSource\accessible-restaurant.json" />
     <None Include="OpenDataSource\MRTElevators.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

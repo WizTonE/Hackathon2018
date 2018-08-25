@@ -1,6 +1,5 @@
-﻿html {
+html {
     font-family: 'Montserrat', sans-serif;
-    
 }
 
 body {
@@ -8,15 +7,25 @@ body {
     margin: 0;
 }
 
-a { text-decoration: none; }
+a {
+    text-decoration: none;
+}
 
-a:link { color: white; }
+    a:link {
+        color: white;
+    }
 
-a:visited { color: white; }
+    a:visited {
+        color: white;
+    }
 
-a:hover { color: white; }
+    a:hover {
+        color: white;
+    }
 
-a:active { color: white; }
+    a:active {
+        color: white;
+    }
 
 
 .main-app-container {
@@ -49,17 +58,12 @@ a:active { color: white; }
 }
 
 .button-box {
-
     display: flex;
     flex-direction: column;
     align-items: center;
-
-
-
     position: absolute;
     width: 100%;
     bottom: 0.2rem;
-
     cursor: pointer;
 }
 
@@ -70,7 +74,7 @@ a:active { color: white; }
     color: #EEEEEE;
     background: url(assets/btn-comfirm.png) no-repeat;
     background-size: 100% 100%;
-    font-size: 2rem; 
+    font-size: 2rem;
 }
 
 .app-title {
@@ -80,13 +84,11 @@ a:active { color: white; }
     padding: 0.15rem;
     color: #78b4b2;
     background-color: #00726e;
-
 }
 
 
 
 .nav-view-box {
-
     width: 100%;
     height: 1.3rem;
     position: absolute;
@@ -105,18 +107,17 @@ a:active { color: white; }
     font-size: 0.75rem;
 }
 
-.nav-items-box .nav-button {
-    flex: 0 0 80px;
-    height: 1.2rem;
-    /* background-image:  */
-    /* border: 1px solid #00726E; */
-    /* background-color: #00726e; */
-    /* border-left: 1px solid #AAA; */
-    color: #FFFFFF;
-    padding: 0.2rem;
-    text-align: center;
-
-}
+    .nav-items-box .nav-button {
+        flex: 0 0 80px;
+        height: 1.2rem;
+        /* background-image:  */
+        /* border: 1px solid #00726E; */
+        /* background-color: #00726e; */
+        /* border-left: 1px solid #AAA; */
+        color: #FFFFFF;
+        padding: 0.2rem;
+        text-align: center;
+    }
 
 
 .language-container {
@@ -141,7 +142,6 @@ a:active { color: white; }
     border-bottom-style: solid;
     border-bottom-width: 1px;
     cursor: pointer;
-    
 }
 
 .map-view {
@@ -169,45 +169,45 @@ a:active { color: white; }
     align-items: center;
 }
 
-.current-position .airport {
-    width: 65px;
-    height: 65px;
-    padding: 0 1rem 0 0;
-    background: url("assets/img-airport.png") no-repeat;
-    background-size: contain;
-}
+    .current-position .airport {
+        width: 65px;
+        height: 65px;
+        padding: 0 1rem 0 0;
+        background: url("assets/img-airport.png") no-repeat;
+        background-size: contain;
+    }
 
-.current-position .metro {
-    width: 65px;
-    height: 65px;
-    padding: 0 1rem 0 0;
-    background: url("assets/img-metro.png") no-repeat;
-    background-size: contain;
-}
+    .current-position .metro {
+        width: 65px;
+        height: 65px;
+        padding: 0 1rem 0 0;
+        background: url("assets/img-metro.png") no-repeat;
+        background-size: contain;
+    }
 
-.current-position .taxi {
-    width: 65px;
-    height: 65px;
-    padding: 0 1rem 0 0;
-    background: url("assets/img-taxi.png") no-repeat;
-    background-size: contain;
-}
+    .current-position .taxi {
+        width: 65px;
+        height: 65px;
+        padding: 0 1rem 0 0;
+        background: url("assets/img-taxi.png") no-repeat;
+        background-size: contain;
+    }
 
-.current-position .hotel {
-    width: 65px;
-    height: 65px;
-    padding: 0 1rem 0 0;
-    background: url("assets/img-hotel.png") no-repeat;
-    background-size: contain;
-}
+    .current-position .hotel {
+        width: 65px;
+        height: 65px;
+        padding: 0 1rem 0 0;
+        background: url("assets/img-hotel.png") no-repeat;
+        background-size: contain;
+    }
 
-.current-position .hotel {
-    width: 65px;
-    height: 65px;
-    padding: 0 1rem 0 0;
-    background: url("assets/img-restaurant.png") no-repeat;
-    background-size: contain;
-}
+    .current-position .hotel {
+        width: 65px;
+        height: 65px;
+        padding: 0 1rem 0 0;
+        background: url("assets/img-restaurant.png") no-repeat;
+        background-size: contain;
+    }
 
 .position-name {
     font-size: 2rem;
@@ -231,49 +231,49 @@ a:active { color: white; }
 }
 
 
-.position-selection .item {
-    flex: 1 0 auto;
-    min-width: 75px;
-    min-height: 75px;
-}
+    .position-selection .item {
+        flex: 1 0 auto;
+        min-width: 75px;
+        min-height: 75px;
+    }
 
 
 
 
-.position-selection .pos0 {
-    width: 35px;
-    height: 35px;
-    padding-bottom: 12px;
-    background: url("assets/img-stage1_green.png") no-repeat;
-}
+    .position-selection .pos0 {
+        width: 35px;
+        height: 35px;
+        padding-bottom: 12px;
+        background: url("assets/img-stage1_green.png") no-repeat;
+    }
 
-.position-selection .pos1 {
-    width: 35px;
-    height: 35px;
-    padding-bottom: 12px;
-    background: url("assets/img-stage2_green.png") no-repeat;
-}
+    .position-selection .pos1 {
+        width: 35px;
+        height: 35px;
+        padding-bottom: 12px;
+        background: url("assets/img-stage2_green.png") no-repeat;
+    }
 
-.position-selection .pos2 {
-    width: 35px;
-    height: 35px;
-    padding-bottom: 12px;
-    background: url("assets/img-stage3_green.png") no-repeat;
-}
+    .position-selection .pos2 {
+        width: 35px;
+        height: 35px;
+        padding-bottom: 12px;
+        background: url("assets/img-stage3_green.png") no-repeat;
+    }
 
-.position-selection .pos3 {
-    width: 35px;
-    height: 35px;
-    padding-bottom: 12px;
-    background: url("assets/img-stage4_green.png") no-repeat;
-}
+    .position-selection .pos3 {
+        width: 35px;
+        height: 35px;
+        padding-bottom: 12px;
+        background: url("assets/img-stage4_green.png") no-repeat;
+    }
 
-.position-selection .pos4 {
-    width: 35px;
-    height: 35px;
-    padding-bottom: 12px;
-    background: url("assets/img-stage5_green.png") no-repeat;
-}
+    .position-selection .pos4 {
+        width: 35px;
+        height: 35px;
+        padding-bottom: 12px;
+        background: url("assets/img-stage5_green.png") no-repeat;
+    }
 
 .active .pos0 {
     background: url("assets/img-stage1_yellow.png") no-repeat;
@@ -332,7 +332,7 @@ a:active { color: white; }
     background: url("assets/img-restaurant_green.png") no-repeat;
 }
 
-.active .icon-airport{
+.active .icon-airport {
     background: url("assets/img-airport_yellow.png") no-repeat;
 }
 
@@ -376,7 +376,6 @@ a:active { color: white; }
     width: 60px;
     height: 60px;
     background: url("assets/img-elevator.png") no-repeat;
-
 }
 
 .here-map-box {
@@ -406,8 +405,8 @@ a:active { color: white; }
 
 .thumb-view {
     position: absolute;
-    right: 2rem;
-    bottom: 15rem;
+    top: 2rem;
+    left: 2rem;
     pointer-events: auto;
 }
 
@@ -441,6 +440,22 @@ a:active { color: white; }
     border: #00726e solid 1px;
 }
 
+.key-pic-metro2 {
+    background: url("key-pic/ZhongSangElevator.jpg") no-repeat;
+    width: 100%;
+    height: 100%;
+    border: #333333 solid 1px;
+    background-size: contain;
+}
+
+.thumb-key-pic-metro2 {
+    background: url("key-pic/ZhongSangElevator.jpg") no-repeat;
+    background-size: contain;
+    width: 120px;
+    height: 80px;
+    border: #00726e solid 1px;
+}
+
 .metro-pic-box {
     width: 100%;
     /* height: 100%; */
@@ -460,7 +475,7 @@ a:active { color: white; }
 }
 
 .icon-uber {
-    background: url(assets/img-uber.png) no-repeat;
+    background: url(assets/img-uber-info.png) no-repeat;
     background-size: contain;
     width: 60px;
     height: 60px;
@@ -488,4 +503,16 @@ a:active { color: white; }
     top: 1.25rem;
     width: 100%;
     bottom: 12.8rem;
+}
+
+.icon-taxi-info-box {
+    background: url("assets/img-infomation_yellow-01.png") no-repeat;
+    background-size: contain;
+    width: 60px;
+    height: 60px;
+    position: fixed;
+    bottom: 8.5rem;
+    left: 35rem;
+    cursor: pointer;
+    z-index: 100;
 }
