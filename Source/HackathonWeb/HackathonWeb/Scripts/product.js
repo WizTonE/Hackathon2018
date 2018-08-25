@@ -507,7 +507,7 @@ const AirportNavView = Vue.component('airport-nav-view',
 
         template:
             '<div class="setup-container">\
-                <div class="map-view">airport nav view</div><span>{{ geo }}</span>\
+                <div class="map-view"></div>\
                 <way-nav-view current="0"></way-nav-view>\
                 <key-thumbnail original="key-pic-airport" thumbnail="thumb-key-pic-airport"></key-thumbnail>\
             </div>',

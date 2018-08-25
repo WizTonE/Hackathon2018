@@ -405,8 +405,8 @@ a {
 
 .thumb-view {
     position: absolute;
-    right: 2rem;
-    bottom: 15rem;
+    top: 2rem;
+    left: 2rem;
     pointer-events: auto;
 }
 
