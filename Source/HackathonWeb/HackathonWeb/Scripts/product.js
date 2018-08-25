@@ -366,11 +366,13 @@ const AirportNavView = Vue.component('airport-nav-view',
 
 
         template:
-            '<div class="setup-container">\
-                <div class="map-view">airport nav view</div><span>{{ geo }}</span>\
-                <way-nav-view current="0"></way-nav-view>\
-                <key-thumbnail original="key-pic-airport" thumbnail="thumb-key-pic-airport"></key-thumbnail>\
-            </div>',
+            `<div class="setup-container">
+                <div class="map-view metro-pic-box">
+                    <img src="../Scripts/assets/t2-f2.png">
+                </div>
+                <way-nav-view current="0"></way-nav-view>
+                <key-thumbnail original="key-pic-airport" thumbnail="thumb-key-pic-airport"></key-thumbnail>
+            </div>`,
 
         created: function () {
             if (window._app) window._app.displayGlobalMap(false);
