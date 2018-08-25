@@ -119,6 +119,7 @@ Vue.component('here-map1',
                     'height="22" /><text x="12" y="18" font-size="12pt" ' +
                     'font-family="Arial" font-weight="bold" text-anchor="middle" ' +
                     'fill="white">R</text></svg>'
+
             }
         },
 
@@ -539,6 +540,7 @@ const MetroNavView = Vue.component('metro-nav-view',
                 <way-nav-view current="1"></way-nav-view>\
                 <key-thumbnail original="key-pic-metro" thumbnail="thumb-key-pic-metro"></key-thumbnail>\
                 <key-thumbnail original="key-pic-metro2" thumbnail="thumb-key-pic-metro2"></key-thumbnail>\
+
             </div>',
 
 
@@ -724,6 +726,7 @@ const app = window._app = new Vue({
         geoLocIntervalId: -1,
         restarauntInfo: window.RestarauntInfo,
         taxiInfo: window.TaxiInfo
+
     },
 
     computed: {

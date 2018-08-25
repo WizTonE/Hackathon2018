@@ -1,6 +1,9 @@
 # Hackathon2018
 Hackathon 2018 with Open Data
 
+# Presentation 
+https://docs.google.com/presentation/d/19O5TFN5lK_qbyOswNb1sGby9TI3Dyh6rdpqxIu7huL8/edit?usp=sharing
+
 
 
 # 用戶端設計
