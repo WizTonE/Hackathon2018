@@ -506,6 +506,7 @@ const SetupView = Vue.component('setup-view',
                 }
 
 
+                  
 
                 if(markers.length == 0) 
                     this.message = "No result found.";
@@ -513,7 +514,9 @@ const SetupView = Vue.component('setup-view',
                     for(var i=0; i<markers.length; i++)
                         this.mapGroup.addObject(markers[i]);
                     this.hereMap.setViewBounds(this.mapGroup.getBounds());
-                
+
+                    this.setDest(markers[0].getData());
+                    return;
                     if(markers.length > 1)
                         this.message = "Too many results, please select one."
                     else {
@@ -563,8 +566,13 @@ const SetupView = Vue.component('setup-view',
                 var current = window._app.$data.currentPosition;
                 var routeParameters = {
                     mode: 'fastest;pedestrian', 
-                    waypoint0: 'geo!' + current.latitude + ',' + current.longitude,
-                    waypoint1: 'geo!' + m.geo.latitude + ',' + m.geo.longtitude,
+
+                    //atitude]=25.0596028&dropoff[longitude]=121.5602683&
+                    //
+//                    waypoint0: 'geo!' + current.latitude + ',' + current.longitude,
+//                    waypoint1: 'geo!' + m.geo.latitude + ',' + m.geo.longtitude,
+                    waypoint0: 'geo!25.0796562,121.2320283',
+                    waypoint1: 'geo!25.0596028,121.5602683',
                     representation: 'display'
                 };
                 var model = this;
