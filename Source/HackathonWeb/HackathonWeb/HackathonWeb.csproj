@@ -154,6 +154,7 @@
     <Content Include="Scripts\assets\img-underline_gray.png" />
     <Content Include="Scripts\assets\img-underline_white.png" />
     <Content Include="Scripts\assets\mrt-Zhongshan.png" />
+    <Content Include="Scripts\assets\t2-f2.png" />
     <Content Include="Scripts\key-pic\elevator-airport.jpg" />
     <Content Include="Scripts\key-pic\elevator-metro.jpg" />
     <Content Include="Scripts\key-pic\ZhongSangElevator.jpg" />

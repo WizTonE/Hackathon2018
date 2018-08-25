@@ -507,11 +507,13 @@ const AirportNavView = Vue.component('airport-nav-view',
 
 
         template:
-            '<div class="setup-container">\
-                <div class="map-view"></div>\
-                <way-nav-view current="0"></way-nav-view>\
-                <key-thumbnail original="key-pic-airport" thumbnail="thumb-key-pic-airport"></key-thumbnail>\
-            </div>',
+            `<div class="setup-container">
+                <div class="map-view metro-pic-box">
+                    <img src="../Scripts/assets/t2-f2.png">
+                </div>
+                <way-nav-view current="0"></way-nav-view>
+                <key-thumbnail original="key-pic-airport" thumbnail="thumb-key-pic-airport"></key-thumbnail>
+            </div>`,
 
         created: function () {
             if (window._app) window._app.displayGlobalMap(false);
@@ -540,7 +542,6 @@ const MetroNavView = Vue.component('metro-nav-view',
                 <way-nav-view current="1"></way-nav-view>\
                 <key-thumbnail original="key-pic-metro" thumbnail="thumb-key-pic-metro"></key-thumbnail>\
                 <key-thumbnail original="key-pic-metro2" thumbnail="thumb-key-pic-metro2"></key-thumbnail>\
-
             </div>',
 
 
